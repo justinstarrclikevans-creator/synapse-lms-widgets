@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>N — Navigating Imbalance | SYNAPSE™ Life & Performance</title>
+<style>
+  :root{
+    --bg:#0F172A; --panel:#1E293B; --panel-2:#162033; --border:#334155;
+    --text:#E2E8F0; --muted:#94A3B8; --cyan:#22D3EE; --emerald:#10B981;
+    --amber:#F59E0B; --rose:#F43F5E; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:28px}
+  @media (max-width:640px){.wrap{padding:16px}}
+  /* Header */
+  header.hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+  .badge{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#10B981);color:#0F172A;font-weight:800;font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(34,211,238,.15)}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 4px}
+  h1{font-size:28px;line-height:1.2;margin:0 0 4px}
+  .subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+  .summary-text{color:var(--muted);margin:0}
+  @media (max-width:640px){header.hero{flex-direction:column}.badge{width:56px;height:56px;flex-basis:56px;font-size:28px}h1{font-size:24px}}
+  /* Progress */
+  .progress-wrap{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;margin-bottom:8px}
+  .progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .progress{height:6px;background:var(--panel);border-radius:999px;overflow:hidden}
+  .progress > div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+  /* Cards */
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin:0 0 20px}
+  @media (max-width:640px){.card{padding:16px}}
+  .chip{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.35);border-radius:999px;padding:4px 10px;margin-bottom:10px}
+  h2{font-size:21px;margin:0 0 8px}
+  h3{font-size:17px;margin:22px 0 8px}
+  p{margin:0 0 12px}
+  .muted{color:var(--muted)}
+  .apply{background:var(--panel-2);border-left:3px solid var(--emerald);border-radius:10px;padding:12px 14px;margin:0 0 16px;font-size:15px}
+  .apply strong{color:var(--emerald);display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .scenario{background:var(--panel-2);border:1px dashed var(--border);border-radius:10px;padding:14px;margin:0 0 16px;font-size:15px}
+  label{display:block;font-weight:600;margin:14px 0 6px;font-size:15px}
+  .hint{font-weight:400;color:var(--muted);font-size:13px}
+  textarea,input[type=text]{width:100%;background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;font-size:15px;min-height:44px;resize:vertical}
+  textarea{min-height:76px}
+  textarea::placeholder,input::placeholder{color:#64748B}
+  textarea:focus,input:focus{outline:none;border-color:var(--cyan)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 18px;border-radius:10px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,opacity .15s ease}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A}
+  .btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+  .btn-secondary:hover{border-color:var(--cyan)}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  /* Scale */
+  .scale-box{background:var(--panel-2);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin:6px 0 16px;transition:box-shadow .5s ease,border-color .5s ease}
+  .scale-box.balanced{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(16,185,129,.25),0 0 28px rgba(16,185,129,.35)}
+  .scale-box svg{display:block;width:100%;height:auto;max-height:260px}
+  #beam,#panL,#panR{transition:transform .8s cubic-bezier(.34,1.3,.64,1)}
+  #beam{transform-box:view-box;transform-origin:200px 70px}
+  .scale-status{text-align:center;font-size:14px;color:var(--muted);margin:4px 0 2px;min-height:22px}
+  .scale-status.ok{color:var(--emerald);font-weight:700}
+  .range-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .range-row input[type=range]{flex:1;accent-color:var(--cyan);min-height:44px}
+  .range-row output{min-width:44px;text-align:center;font-weight:700;color:var(--cyan);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:4px 6px}
+  .side{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .side label{margin-top:0}
+  .side-tag{font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .side-tag.l{color:var(--cyan)} .side-tag.r{color:var(--amber)}
+  .readout{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;font-size:16px;font-style:italic}
+  .readout.empty{color:var(--muted);font-style:normal}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .toggle button{flex:1;min-width:140px;min-height:52px;border-radius:10px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+  .toggle button .big{font-size:20px;display:block}
+  .toggle button .small{font-size:12px;font-weight:500;color:var(--muted)}
+  .toggle button[aria-pressed=true].t411{border-color:var(--emerald);background:rgba(16,185,129,.15)}
+  .toggle button[aria-pressed=true].t911{border-color:var(--rose);background:rgba(244,63,94,.15)}
+  .compare{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 14px}
+  .compare th,.compare td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+  .compare th{background:var(--panel-2)}
+  .compare .c411{color:var(--emerald)} .compare .c911{color:var(--rose)}
+  /* Sorter */
+  .sort-item{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;transition:border-color .3s}
+  .sort-item.right{border-color:var(--emerald)} .sort-item.wrong{border-color:var(--rose)}
+  .sort-q{margin:0 0 8px}
+  .sort-btns{display:flex;gap:8px}
+  .sort-btns button{min-height:44px;min-width:72px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+  .sort-btns button.sel411{background:rgba(16,185,129,.2);border-color:var(--emerald)}
+  .sort-btns button.sel911{background:rgba(244,63,94,.2);border-color:var(--rose)}
+  .sort-fb{font-size:14px;margin-top:8px;color:var(--muted)}
+  .sort-score{font-weight:700;color:var(--cyan)}
+  /* Doubt rows */
+  .drow{display:grid;grid-template-columns:1fr 40px 1fr;gap:10px;align-items:stretch;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:12px;transition:border-color .3s,background .3s}
+  .drow.done{border-color:var(--emerald);background:rgba(16,185,129,.08)}
+  .drow label{margin:0 0 6px}
+  .arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--muted);transition:color .3s}
+  .drow.done .arrow{color:var(--emerald)}
+  @media (max-width:640px){.drow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);height:24px}}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .ex-chip{font:inherit;font-size:13px;min-height:36px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;text-align:left}
+  .ex-chip:hover{border-color:var(--cyan);color:var(--text)}
+  /* Quiz */
+  .q{margin-bottom:22px}
+  .q-text{font-weight:600;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;min-height:44px;margin:0 0 8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:inherit;font-size:15px;cursor:pointer}
+  .opt:hover:not(:disabled){border-color:var(--cyan)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.15)}
+  .opt.incorrect{border-color:var(--rose);background:rgba(244,63,94,.15)}
+  .explain{font-size:14px;padding:10px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border)}
+  .explain:empty{display:none}
+  .score{font-size:18px;font-weight:800;color:var(--cyan)}
+  /* Summary */
+  pre.summary{white-space:pre-wrap;word-wrap:break-word;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55;max-height:480px;overflow:auto;margin:0}
+  .status{font-size:14px;color:var(--emerald);min-height:20px;margin-top:8px}
+  .challenge{background:linear-gradient(135deg,rgba(34,211,238,.1),rgba(16,185,129,.1));border:1px solid rgba(16,185,129,.4);border-radius:12px;padding:14px 16px;margin:0 0 16px}
+  .challenge ol{margin:8px 0 0;padding-left:20px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 0 24px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+  @media print{
+    body{background:#fff;color:#000}
+    .progress-wrap,.btn,.btn-row,.toggle,.chips,.sort-btns,.scale-box,#quizCard,.status,.opt{display:none!important}
+    .card{background:#fff;border:1px solid #999;color:#000;break-inside:avoid}
+    .apply,.scenario,.side,.drow,.sort-item,.challenge,.readout{background:#fff!important;color:#000;border-color:#999}
+    textarea,input[type=text]{background:#fff;color:#000;border:1px solid #999}
+    pre.summary{background:#fff;color:#000;border:1px solid #999;max-height:none;overflow:visible}
+    .chip,.subtitle,.muted,.summary-text,.hint,.eyebrow,footer{color:#333!important}
+    .badge{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="badge" aria-hidden="true">N</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 3 of 7</p>
+      <h1>N — Navigating Imbalance</h1>
+      <p class="subtitle">Unshakable Confidence • The 411 vs. 911 Scale &amp; Doubt-to-Action Plan</p>
+      <p class="summary-text">Your built-in survival system can't tell the difference between real danger and everyday stress, so a small mistake or a gap between what you want and what you do can feel like a full-blown emergency. Using The Scale, you weigh both sides fairly, treat pressure as useful information (411) instead of a crisis (911), and turn every self-doubt into one specific, practical action step.</p>
+    </div>
+  </header>
+
+  <div class="progress-wrap" role="region" aria-label="Progress">
+    <div class="progress-label"><span>Your progress</span><span id="progressText">0% complete</span></div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><div id="progressFill"></div></div>
+  </div>
+
+  <!-- STEP 1: YOURSELF -->
+  <section class="card" aria-labelledby="s1h">
+    <span class="chip">Step 1 · Yourself</span>
+    <h2 id="s1h">The 411 vs. 911 Scale</h2>
+    <div class="apply">
+      <strong>How to Apply It to Yourself</strong>
+      Imbalance happens when what you say you want doesn't match what you are actually doing—like wanting to advance at work or school, yet skipping preparation or staying up until 2:00 AM on your phone. When you catch this gap in yourself, don't spiral into shame; use <b>The Scale</b>. Treating this gap as helpful information (<b>411</b>) instead of a crisis emergency (<b>911</b>) allows you to see the problem clearly and make a practical adjustment without feeling like a failure.
+    </div>
+
+    <table class="compare">
+      <thead><tr><th></th><th class="c411">411 — Information</th><th class="c911">911 — Emergency</th></tr></thead>
+      <tbody>
+        <tr><th>What it means</th><td>"This is useful information about what to adjust."</td><td>"This is a crisis and everything is falling apart."</td></tr>
+        <tr><th>Example</th><td>"I missed a step in the report—I'll add a checklist next time."</td><td>"I missed a step—I'm terrible at my job and everyone knows it."</td></tr>
+      </tbody>
+    </table>
+
+    <div class="scale-box" id="scaleBox">
+      <svg viewBox="0 0 400 240" role="img" aria-labelledby="scaleTitle">
+        <title id="scaleTitle">Balance scale showing how heavy each side feels</title>
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#10B981"/></linearGradient>
+        </defs>
+        <!-- stand -->
+        <rect x="194" y="70" width="12" height="140" rx="4" fill="#334155"/>
+        <rect x="140" y="208" width="120" height="14" rx="7" fill="#334155"/>
+        <!-- beam -->
+        <g id="beam">
+          <rect x="60" y="64" width="280" height="12" rx="6" fill="url(#g1)"/>
+        </g>
+        <circle cx="200" cy="70" r="12" fill="#0F172A" stroke="url(#g1)" stroke-width="4"/>
+        <!-- left pan -->
+        <g id="panL">
+          <line x1="0" y1="0" x2="-34" y2="60" stroke="#94A3B8" stroke-width="2"/>
+          <line x1="0" y1="0" x2="34" y2="60" stroke="#94A3B8" stroke-width="2"/>
+          <path d="M-46 60 Q0 98 46 60 Z" fill="#22D3EE" fill-opacity=".25" stroke="#22D3EE" stroke-width="2"/>
+          <text x="0" y="82" text-anchor="middle" fill="#E2E8F0" font-size="12" font-weight="700" id="panLtxt">WANT</text>
+        </g>
+        <!-- right pan -->
+        <g id="panR">
+          <line x1="0" y1="0" x2="-34" y2="60" stroke="#94A3B8" stroke-width="2"/>
+          <line x1="0" y1="0" x2="34" y2="60" stroke="#94A3B8" stroke-width="2"/>
+          <path d="M-46 60 Q0 98 46 60 Z" fill="#F59E0B" fill-opacity=".25" stroke="#F59E0B" stroke-width="2"/>
+          <text x="0" y="82" text-anchor="middle" fill="#E2E8F0" font-size="12" font-weight="700" id="panRtxt">DOING</text>
+        </g>
+      </svg>
+      <p class="scale-status" id="scaleStatus" aria-live="polite">Fill in both sides to see how your scale tips.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="side">
+        <span class="side-tag l">Left pan</span>
+        <label for="want">What I say I want</label>
+        <textarea id="want" data-key="want" placeholder="e.g., I really want to grow and feel prepared for my certification exam."></textarea>
+        <label for="wantW">How heavy does this feel? <span class="hint">(1–10)</span></label>
+        <div class="range-row"><input type="range" id="wantW" data-key="wantW" min="1" max="10" value="5"><output id="wantWout" for="wantW">5</output></div>
+      </div>
+      <div class="side">
+        <span class="side-tag r">Right pan</span>
+        <label for="doing">What I'm actually doing</label>
+        <textarea id="doing" data-key="doing" placeholder="e.g., Staying up until 2:00 AM scrolling on my phone and skipping my study sessions."></textarea>
+        <label for="doingW">How heavy does this feel? <span class="hint">(1–10)</span></label>
+        <div class="range-row"><input type="range" id="doingW" data-key="doingW" min="1" max="10" value="5"><output id="doingWout" for="doingW">5</output></div>
+      </div>
+    </div>
+
+    <label for="reason">The fair reason behind it <span class="hint">(the other side of the scale—no shame)</span></label>
+    <textarea id="reason" data-key="reason" placeholder="e.g., Scrolling is how I blow off stress after a long day."></textarea>
+
+    <div class="btn-row"><button type="button" class="btn btn-primary" id="readScale">Read the Scale</button></div>
+    <div class="readout empty" id="readout" aria-live="polite">Your "On one hand… on the other hand…" sentence will appear here.</div>
+
+    <h3>Did this feel like a 911 or a 411?</h3>
+    <div class="toggle" role="group" aria-label="Did this feel like a 911 or a 411?">
+      <button type="button" class="t911" data-feel="911" aria-pressed="false"><span class="big">911</span><span class="small">It felt like a crisis</span></button>
+      <button type="button" class="t411" data-feel="411" aria-pressed="false"><span class="big">411</span><span class="small">It's useful information</span></button>
+    </div>
+
+    <label for="rewrite">Rewrite it as a 411 <span class="hint">(what useful information is this giving you, and what's one practical adjustment?)</span></label>
+    <textarea id="rewrite" data-key="rewrite" placeholder="e.g., I need a different way to unwind that doesn't cost me sleep. I'll try a 20-minute walk and charge my phone in the kitchen at 10:30."></textarea>
+
+    <h3>Quick Sort: 411 or 911?</h3>
+    <p class="muted">Tag each everyday statement. Is it treating pressure as useful information (411) or as an emergency (911)? <span class="sort-score" id="sortScore"></span></p>
+    <div id="sorter"></div>
+
+    <h3>The Doubt-to-Action Plan</h3>
+    <div class="apply">
+      <strong>Building Unshakable Confidence</strong>
+      Doubts are helpful clues because they point right to what you need to work on next. Confidence built on reality rather than bluffing cannot be destroyed by a mistake.
+    </div>
+    <p class="muted">Write down three doubts you have on the left, and one specific practical action to work through each doubt on the right.</p>
+    <div id="doubtRows"></div>
+  </section>
+
+  <!-- STEP 2: OTHERS -->
+  <section class="card" aria-labelledby="s2h">
+    <span class="chip">Step 2 · Others</span>
+    <h2 id="s2h">Hold the Scale Steady</h2>
+    <div class="apply">
+      <strong>How to Apply It to Others</strong>
+      When you see someone showing mixed signals—like saying they care about a group goal, then throwing their hands in the air and giving halfhearted effort after a setback—don't attack them or call them a hypocrite. Hold the scale steady for them by gently pointing out both truths. By showing them you see their good intentions as well as their frustration, you keep them from getting defensive and help them get back on track with the group.
+    </div>
+    <div class="scenario">
+      <b>Real-Life Scenario:</b> Your volunteer group is organizing a neighborhood food drive. Priya was the most excited person at the first meeting and said she would "do whatever it takes." After the first weekend brought in fewer donations than hoped, she started showing up late, stopped answering the group chat, and said, "Honestly, what's the point?" Some members are frustrated and want to call her out.
+    </div>
+    <label for="oHand1">On one hand… <span class="hint">(their good intention)</span></label>
+    <input type="text" id="oHand1" data-key="oHand1" placeholder="e.g., I know how much you care about this food drive—you got all of us fired up">
+    <label for="oHand2">On the other hand… <span class="hint">(the behavior and its effect)</span></label>
+    <input type="text" id="oHand2" data-key="oHand2" placeholder="e.g., when you step back from the chat, the rest of us feel a little lost without you">
+    <label>Your full sentence <span class="hint">(preview)</span></label>
+    <div class="readout empty" id="othersPreview" aria-live="polite">Fill in both parts to preview what you'll say.</div>
+    <label for="oReflect">Bonus Reflection: Why does naming their good intention first make it less likely they'll get defensive?</label>
+    <textarea id="oReflect" data-key="oReflect" placeholder="e.g., They feel seen for who they really are, so they don't have to protect themselves."></textarea>
+  </section>
+
+  <!-- STEP 3: QUIZ -->
+  <section class="card" id="quizCard" aria-labelledby="s3h">
+    <span class="chip">Step 3 · Knowledge Check</span>
+    <h2 id="s3h">Check Your Understanding</h2>
+    <p class="muted">Choose one answer for each question. You'll see right away whether it's correct and why.</p>
+    <div id="quiz"></div>
+    <p>Score: <span class="score" id="quizScore" aria-live="polite">0 / 3</span></p>
+    <div class="btn-row"><button type="button" class="btn btn-secondary" id="retryQuiz">Retry quiz</button></div>
+  </section>
+
+  <!-- STEP 4: SUMMARY -->
+  <section class="card" aria-labelledby="s4h">
+    <span class="chip">Step 4 · Your Summary</span>
+    <h2 id="s4h">Your Navigating Imbalance Summary</h2>
+    <div class="challenge">
+      <b>🎯 Try This Today — Turn One 911 Into a 411</b>
+      <ol>
+        <li><b>Spot the alarm:</b> The next time something today feels like a crisis (a critical email, a schedule change, a mistake), pause and ask: "Is this really a 911, or is it a 411?"</li>
+        <li><b>Say the scale out loud:</b> "On one hand, ______; on the other hand, ______."</li>
+        <li><b>Doubt to action:</b> Write down one doubt that showed up today and pair it with one action you can take in under 15 minutes. Then do it before you go to bed.</li>
+      </ol>
+    </div>
+    <pre class="summary" id="summary" tabindex="0" aria-label="Summary text"></pre>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="copyBtn">Copy Summary</button>
+      <button type="button" class="btn btn-secondary" id="printBtn">Print / Save as PDF</button>
+      <button type="button" class="btn btn-secondary" id="resetBtn">Start Over</button>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var STORE_KEY = 'synapse-03-navigating';
+
+  var SORT_ITEMS = [
+    {t:'"I missed a step in the report—I\'ll add a checklist next time."', a:'411', why:'It names what happened and turns it into a practical adjustment.'},
+    {t:'"I got one critical comment, so everyone must think I\'m terrible."', a:'911', why:'One comment is being blown up into a crisis about your whole worth.'},
+    {t:'"My schedule changed at the last minute. Let me look at what I can move around."', a:'411', why:'The change is treated as information to work with, not a disaster.'},
+    {t:'"I\'m behind on my budget again—I\'m just hopeless with money."', a:'911', why:'It turns a gap into shame instead of a clue about what to work on next.'},
+    {t:'"I stayed up too late again. Tonight I\'ll charge my phone in the kitchen."', a:'411', why:'It weighs the gap honestly and pairs it with one concrete step.'}
+  ];
+
+  var DOUBT_EX = [
+    ['I\'m not good at speaking up in meetings.', 'Write down one point before every meeting and share it in the first 10 minutes.'],
+    ['I\'m always behind on my to-do list.', 'Pick my top 3 tasks every morning before opening email.'],
+    ['I don\'t know enough about budgeting to fix my finances.', 'Spend 15 minutes on Saturday listing every monthly bill in one place.']
+  ];
+
+  var QUIZ = [
+    {q:'Alex gets a sharp comment from a supervisor about a typo in a report. His heart races and he thinks, "I\'m going to get fired." Using the 411 vs. 911 mindset, what is the best response?',
+     o:['Treat it as a 911 and immediately start updating his résumé.','Treat it as a 411—useful information—and add a proofreading step before sending reports.','Ignore the comment completely so it doesn\'t affect him.','Argue with the supervisor that typos don\'t matter.'],
+     c:1, e:'Pressure is not danger; treating feedback as useful information (411) lets you make a practical adjustment instead of spiraling.'},
+    {q:'Which statement best describes "unshakable confidence" in SYNAPSE?',
+     o:['Telling yourself you\'re the best in the room, even if it isn\'t true.','Never admitting you have doubts.','Honestly accepting where your skills are right now and staying optimistic that focused effort will help you grow.','Avoiding situations where you might make mistakes.'],
+     c:2, e:'Confidence built on reality rather than bluffing can\'t be shattered by a single mistake.'},
+    {q:'A teammate says they care about the group project but has gone quiet since a setback. Which response "holds the scale steady"?',
+     o:['"You obviously don\'t care about this anymore."','"On one hand, I know how much you want this project to succeed; on the other hand, pulling back makes it harder on all of us. What\'s going on?"','Say nothing and quietly do their share of the work.','Report them to the group leader without talking to them first.'],
+     c:1, e:'Naming both their good intentions and the impact of their behavior keeps them from getting defensive and helps them reconnect with the group.'}
+  ];
+  var LETTERS = ['A','B','C','D'];
+
+  var state = {fields:{}, feel:'', sort:{}, quiz:{}};
+
+  function $(id){ return document.getElementById(id); }
+  function load(){
+    try{ var raw = localStorage.getItem(STORE_KEY); if(raw){ var s = JSON.parse(raw); if(s && typeof s === 'object'){ state.fields = s.fields||{}; state.feel = s.feel||''; state.sort = s.sort||{}; state.quiz = s.quiz||{}; } } }catch(e){}
+  }
+  function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+  function val(k){ var v = state.fields[k]; return (typeof v === 'string') ? v.trim() : ''; }
+  function stripEnd(s){ return s.replace(/[.!?\s]+$/,''); }
+  function lowerFirst(s){ return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+  /* ---------- Doubt rows ---------- */
+  function buildDoubts(){
+    var host = $('doubtRows');
+    for(var i=1;i<=3;i++){
+      var row = document.createElement('div'); row.className = 'drow'; row.id = 'drow'+i;
+      var left = document.createElement('div');
+      var l1 = document.createElement('label'); l1.htmlFor = 'doubt'+i; l1.textContent = 'Doubt #'+i;
+      var t1 = document.createElement('textarea'); t1.id = 'doubt'+i; t1.setAttribute('data-key','doubt'+i); t1.placeholder = 'Deep doubt...';
+      left.appendChild(l1); left.appendChild(t1);
+      var arrow = document.createElement('div'); arrow.className = 'arrow'; arrow.setAttribute('aria-hidden','true'); arrow.textContent = '→';
+      var right = document.createElement('div');
+      var l2 = document.createElement('label'); l2.htmlFor = 'action'+i; l2.textContent = 'Practical Action #'+i;
+      var t2 = document.createElement('textarea'); t2.id = 'action'+i; t2.setAttribute('data-key','action'+i); t2.placeholder = 'Concrete action...';
+      right.appendChild(l2); right.appendChild(t2);
+      row.appendChild(left); row.appendChild(arrow); row.appendChild(right);
+      var chips = document.createElement('div'); chips.className = 'chips'; chips.style.gridColumn = '1 / -1';
+      var chip = document.createElement('button'); chip.type = 'button'; chip.className = 'ex-chip';
+      chip.textContent = '+ Use example: "' + DOUBT_EX[i-1][0] + '"';
+      chip.setAttribute('data-row', String(i));
+      chip.addEventListener('click', function(){
+        var n = this.getAttribute('data-row'); var ex = DOUBT_EX[n-1];
+        if(!val('doubt'+n)){ state.fields['doubt'+n] = ex[0]; $('doubt'+n).value = ex[0]; }
+        if(!val('action'+n)){ state.fields['action'+n] = ex[1]; $('action'+n).value = ex[1]; }
+        save(); refresh();
+      });
+      chips.appendChild(chip); row.appendChild(chips);
+      host.appendChild(row);
+    }
+  }
+
+  /* ---------- Sorter ---------- */
+  function buildSorter(){
+    var host = $('sorter');
+    SORT_ITEMS.forEach(function(it, idx){
+      var box = document.createElement('div'); box.className = 'sort-item'; box.id = 'sort'+idx;
+      var q = document.createElement('p'); q.className = 'sort-q'; q.textContent = it.t;
+      var btns = document.createElement('div'); btns.className = 'sort-btns'; btns.setAttribute('role','group'); btns.setAttribute('aria-label','Tag statement '+(idx+1));
+      ['411','911'].forEach(function(tag){
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = tag; b.setAttribute('data-tag', tag);
+        b.addEventListener('click', function(){ state.sort[idx] = tag; save(); refresh(); });
+        btns.appendChild(b);
+      });
+      var fb = document.createElement('div'); fb.className = 'sort-fb'; fb.setAttribute('aria-live','polite');
+      box.appendChild(q); box.appendChild(btns); box.appendChild(fb);
+      host.appendChild(box);
+    });
+  }
+  function renderSorter(){
+    var right = 0, answered = 0;
+    SORT_ITEMS.forEach(function(it, idx){
+      var box = $('sort'+idx), pick = state.sort[idx];
+      var btns = box.querySelectorAll('button');
+      for(var i=0;i<btns.length;i++){
+        var t = btns[i].getAttribute('data-tag');
+        btns[i].className = (pick === t) ? ('sel'+t) : '';
+        btns[i].setAttribute('aria-pressed', pick === t ? 'true' : 'false');
+      }
+      var fb = box.querySelector('.sort-fb');
+      box.classList.remove('right','wrong');
+      if(pick){
+        answered++;
+        if(pick === it.a){ right++; box.classList.add('right'); fb.textContent = '✓ Yes — that\'s a ' + it.a + '. ' + it.why; }
+        else { box.classList.add('wrong'); fb.textContent = '✗ Look again — that\'s a ' + it.a + '. ' + it.why; }
+      } else fb.textContent = '';
+    });
+    $('sortScore').textContent = answered ? ('(' + right + ' of ' + SORT_ITEMS.length + ' correct)') : '';
+    return {right:right, answered:answered};
+  }
+
+  /* ---------- Quiz ---------- */
+  function buildQuiz(){
+    var host = $('quiz');
+    QUIZ.forEach(function(item, qi){
+      var wrap = document.createElement('div'); wrap.className = 'q'; wrap.id = 'q'+qi;
+      var qt = document.createElement('div'); qt.className = 'q-text'; qt.textContent = (qi+1) + '. ' + item.q;
+      wrap.appendChild(qt);
+      item.o.forEach(function(opt, oi){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'opt';
+        b.textContent = LETTERS[oi] + ') ' + opt;
+        b.addEventListener('click', function(){ if(state.quiz[qi] === undefined){ state.quiz[qi] = oi; save(); refresh(); } });
+        wrap.appendChild(b);
+      });
+      var ex = document.createElement('div'); ex.className = 'explain'; ex.setAttribute('aria-live','polite');
+      wrap.appendChild(ex);
+      host.appendChild(wrap);
+    });
+  }
+  function renderQuiz(){
+    var score = 0, answered = 0;
+    QUIZ.forEach(function(item, qi){
+      var wrap = $('q'+qi), pick = state.quiz[qi];
+      var opts = wrap.querySelectorAll('.opt'), ex = wrap.querySelector('.explain');
+      var locked = (pick !== undefined && pick !== null);
+      for(var i=0;i<opts.length;i++){
+        opts[i].disabled = locked;
+        opts[i].classList.remove('correct','incorrect');
+        if(locked){
+          if(i === item.c) opts[i].classList.add('correct');
+          else if(i === pick) opts[i].classList.add('incorrect');
+        }
+      }
+      if(locked){
+        answered++;
+        var ok = pick === item.c; if(ok) score++;
+        ex.textContent = (ok ? '✓ Correct. ' : '✗ Not quite — the correct answer is ' + LETTERS[item.c] + '. ') + item.e;
+      } else ex.textContent = '';
+    });
+    $('quizScore').textContent = score + ' / 3';
+    return {score:score, answered:answered};
+  }
+
+  /* ---------- Scale ---------- */
+  var CX = 200, CY = 70, L = 130;
+  function renderScale(){
+    var want = val('want'), doing = val('doing'), rewrite = val('rewrite');
+    var wW = parseInt(state.fields.wantW || '5', 10), dW = parseInt(state.fields.doingW || '5', 10);
+    $('wantWout').textContent = wW; $('doingWout').textContent = dW;
+    var lw = want ? wW : 0, rw = doing ? dW : 0;
+    var balanced = !!rewrite && !!want && !!doing;
+    var deg = balanced ? 0 : Math.max(-18, Math.min(18, (rw - lw) * 2.4));
+    var rad = deg * Math.PI / 180;
+    var lx = CX - L*Math.cos(rad), ly = CY - L*Math.sin(rad);
+    var rx = CX + L*Math.cos(rad), ry = CY + L*Math.sin(rad);
+    $('beam').style.transform = 'rotate(' + deg + 'deg)';
+    $('panL').style.transform = 'translate(' + lx + 'px,' + ly + 'px)';
+    $('panR').style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+    // Fallback attributes for older SVG engines
+    $('panL').setAttribute('transform','translate(' + lx + ' ' + ly + ')');
+    $('panR').setAttribute('transform','translate(' + rx + ' ' + ry + ')');
+    $('beam').setAttribute('transform','rotate(' + deg + ' ' + CX + ' ' + CY + ')');
+    $('scaleBox').classList.toggle('balanced', balanced);
+    var st = $('scaleStatus');
+    st.classList.toggle('ok', balanced);
+    if(balanced) st.textContent = '⚖️ Balanced — you turned this gap into a 411. That\'s useful information, not an emergency.';
+    else if(!want && !doing) st.textContent = 'Fill in both sides to see how your scale tips.';
+    else if(!want || !doing) st.textContent = 'Now fill in the other side of the scale.';
+    else if(deg > 0) st.textContent = 'Tipping toward what you\'re actually doing. Weigh both sides fairly, then rewrite it as a 411 to level it out.';
+    else if(deg < 0) st.textContent = 'Tipping toward what you say you want. Write your 411 rewrite to level it out.';
+    else st.textContent = 'Both sides feel equally heavy. Write your 411 rewrite below.';
+
+    var btns = document.querySelectorAll('.toggle button');
+    for(var i=0;i<btns.length;i++) btns[i].setAttribute('aria-pressed', btns[i].getAttribute('data-feel') === state.feel ? 'true' : 'false');
+  }
+  function scaleSentence(){
+    var want = val('want'), doing = val('doing'), reason = val('reason');
+    if(!want || !doing) return '';
+    var other = reason ? lowerFirst(stripEnd(reason)) : lowerFirst(stripEnd(doing));
+    return 'On one hand, ' + lowerFirst(stripEnd(want)) + '; on the other hand, ' + other + '.';
+  }
+  function renderReadout(){
+    var r = $('readout'), s = scaleSentence();
+    if(state.readShown && s){ r.textContent = '"' + s + '"'; r.classList.remove('empty'); }
+    else if(state.readShown){ r.textContent = 'Fill in both "What I say I want" and "What I\'m actually doing" first.'; r.classList.add('empty'); }
+    else { r.textContent = 'Your "On one hand… on the other hand…" sentence will appear here.'; r.classList.add('empty'); }
+  }
+
+  /* ---------- Others ---------- */
+  function othersSentence(){
+    var a = val('oHand1'), b = val('oHand2');
+    if(!a || !b) return '';
+    return 'On one hand, ' + lowerFirst(stripEnd(a)) + '; on the other hand, ' + lowerFirst(stripEnd(b)) + '. What\'s going on?';
+  }
+
+  /* ---------- Doubts ---------- */
+  function renderDoubts(){
+    var done = 0;
+    for(var i=1;i<=3;i++){
+      var full = !!val('doubt'+i) && !!val('action'+i);
+      $('drow'+i).classList.toggle('done', full);
+      if(full) done++;
+    }
+    return done;
+  }
+
+  /* ---------- Summary ---------- */
+  function line(label, v){ return label + ': ' + (v || '—'); }
+  function buildSummary(q, srt){
+    var out = [];
+    out.push('SYNAPSE™ LIFE & PERFORMANCE');
+    out.push('N — NAVIGATING IMBALANCE: The 411 vs. 911 Scale & Doubt-to-Action Plan');
+    out.push('');
+    out.push('— STEP 1 · YOURSELF: THE SCALE —');
+    out.push(line('What I say I want', val('want')) + '  [weight ' + (state.fields.wantW||'5') + '/10]');
+    out.push(line('What I\'m actually doing', val('doing')) + '  [weight ' + (state.fields.doingW||'5') + '/10]');
+    out.push(line('The fair reason behind it', val('reason')));
+    out.push(line('Reading the scale', scaleSentence()));
+    out.push(line('It felt like a', state.feel));
+    out.push(line('Rewritten as a 411', val('rewrite')));
+    out.push('Quick Sort: ' + srt.right + ' of ' + SORT_ITEMS.length + ' correct (' + srt.answered + ' answered)');
+    out.push('');
+    out.push('— THE DOUBT-TO-ACTION PLAN —');
+    for(var i=1;i<=3;i++){
+      out.push('Doubt #' + i + ': ' + (val('doubt'+i) || '—'));
+      out.push('   → Practical Action #' + i + ': ' + (val('action'+i) || '—'));
+    }
+    out.push('');
+    out.push('— STEP 2 · OTHERS: HOLD THE SCALE STEADY —');
+    out.push(line('What I\'ll say', othersSentence()));
+    out.push(line('Why naming their good intention first helps', val('oReflect')));
+    out.push('');
+    out.push('— STEP 3 · KNOWLEDGE CHECK —');
+    out.push('Score: ' + q.score + ' / 3 (' + q.answered + ' of 3 answered)');
+    out.push('');
+    out.push('— TRY THIS TODAY: TURN ONE 911 INTO A 411 —');
+    out.push('1. Spot the alarm: The next time something today feels like a crisis, pause and ask: "Is this really a 911, or is it a 411?"');
+    out.push('2. Say the scale out loud: "On one hand, ______; on the other hand, ______."');
+    out.push('3. Doubt to action: Write down one doubt that showed up today and pair it with one action you can take in under 15 minutes. Then do it before you go to bed.');
+    return out.join('\n');
+  }
+
+  /* ---------- Progress ---------- */
+  function renderProgress(q, srt, doubts){
+    var sections = [
+      !!(val('want') && val('doing') && val('rewrite')),
+      srt.answered === SORT_ITEMS.length,
+      doubts === 3,
+      !!(val('oHand1') && val('oHand2')),
+      q.answered === 3
+    ];
+    var n = sections.filter(Boolean).length;
+    var pct = Math.round(n / sections.length * 100);
+    $('progressFill').style.width = pct + '%';
+    $('progressText').textContent = pct + '% complete';
+    $('progressBar').setAttribute('aria-valuenow', String(pct));
+  }
+
+  function postHeight(){
+    try{ window.parent.postMessage({type:'synapse-widget-height', height: document.documentElement.scrollHeight}, '*'); }catch(e){}
+  }
+
+  function refresh(){
+    renderScale();
+    renderReadout();
+    var srt = renderSorter();
+    var doubts = renderDoubts();
+    var op = $('othersPreview'), os = othersSentence();
+    if(os){ op.textContent = '"' + os + '"'; op.classList.remove('empty'); }
+    else { op.textContent = 'Fill in both parts to preview what you\'ll say.'; op.classList.add('empty'); }
+    var q = renderQuiz();
+    $('summary').textContent = buildSummary(q, srt);
+    renderProgress(q, srt, doubts);
+    postHeight();
+  }
+
+  function bindFields(){
+    var els = document.querySelectorAll('[data-key]');
+    for(var i=0;i<els.length;i++){
+      (function(el){
+        var k = el.getAttribute('data-key');
+        if(typeof state.fields[k] === 'string') el.value = state.fields[k];
+        el.addEventListener('input', function(){ state.fields[k] = el.value; save(); refresh(); });
+      })(els[i]);
+    }
+  }
+
+  /* ---------- Copy / Print / Reset ---------- */
+  function setStatus(msg){ var s = $('status'); s.textContent = msg; clearTimeout(setStatus._t); setStatus._t = setTimeout(function(){ s.textContent = ''; postHeight(); }, 4000); }
+  function selectSummary(){
+    try{ var r = document.createRange(); r.selectNodeContents($('summary')); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }catch(e){}
+  }
+  function fallbackCopy(text){
+    var ok = false;
+    try{
+      var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      ok = document.execCommand('copy'); document.body.removeChild(ta);
+    }catch(e){ ok = false; }
+    if(ok) setStatus('✓ Summary copied to your clipboard.');
+    else { selectSummary(); setStatus('Summary selected — press Ctrl/Cmd+C to copy.'); }
+  }
+  $('copyBtn').addEventListener('click', function(){
+    var text = $('summary').textContent;
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(function(){ setStatus('✓ Summary copied to your clipboard.'); }, function(){ fallbackCopy(text); });
+    } else fallbackCopy(text);
+  });
+  $('printBtn').addEventListener('click', function(){ try{ window.print(); }catch(e){ setStatus('Printing isn\'t available here — try opening this page in its own tab.'); } });
+  $('resetBtn').addEventListener('click', function(){
+    if(!window.confirm('Start over? This clears all of your answers on this page.')) return;
+    try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+    state = {fields:{}, feel:'', sort:{}, quiz:{}};
+    var els = document.querySelectorAll('[data-key]');
+    for(var i=0;i<els.length;i++){ els[i].value = (els[i].type === 'range') ? '5' : ''; }
+    refresh(); setStatus('Everything has been cleared. Fresh start.');
+    window.scrollTo(0,0);
+  });
+  $('retryQuiz').addEventListener('click', function(){ state.quiz = {}; save(); refresh(); });
+  $('readScale').addEventListener('click', function(){ state.readShown = true; save(); refresh(); });
+  var tbtns = document.querySelectorAll('.toggle button');
+  for(var i=0;i<tbtns.length;i++){
+    tbtns[i].addEventListener('click', function(){ state.feel = this.getAttribute('data-feel'); save(); refresh(); });
+  }
+
+  /* ---------- Init ---------- */
+  load();
+  buildDoubts();
+  buildSorter();
+  buildQuiz();
+  bindFields();
+  refresh();
+  window.addEventListener('resize', postHeight);
+  window.addEventListener('load', postHeight);
+})();
+</script>
+</body>
+</html>

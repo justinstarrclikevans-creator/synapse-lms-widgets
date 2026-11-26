@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE • P — Pictures: Survival, Cost & Strengths • Alter Ego Blueprint</title>
+<style>
+:root{
+  --bg:#0F172A; --panel:#1E293B; --panel-2:#162033; --border:#334155;
+  --text:#E2E8F0; --muted:#94A3B8; --cyan:#22D3EE; --emerald:#10B981;
+  --amber:#F59E0B; --rose:#F43F5E; --violet:#A78BFA; --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:16px}
+@media(min-width:640px){.wrap{padding:28px}}
+a{color:var(--cyan)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* Header */
+header.top{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.badge{flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#10B981);color:#0F172A;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;box-shadow:0 0 24px rgba(34,211,238,.25)}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+h1{font-size:26px;line-height:1.2;margin:0 0 4px}
+.subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+.summary{color:var(--muted);margin:0}
+
+/* Progress */
+.progress-wrap{position:sticky;top:0;z-index:10;background:rgba(15,23,42,.92);backdrop-filter:blur(6px);padding:8px 0 10px;margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:5px}
+.progress{height:6px;background:var(--panel);border-radius:99px;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+
+/* Cards */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+@media(min-width:640px){.card{padding:24px}}
+.chip{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:99px;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.3);margin-bottom:10px}
+.card h2{font-size:20px;margin:0 0 6px}
+.card h3{font-size:16px;margin:18px 0 8px}
+.lead{color:var(--muted);margin:0 0 14px}
+.apply{background:var(--panel-2);border-left:3px solid var(--emerald);border-radius:10px;padding:12px 14px;margin:0 0 16px;font-size:15px}
+.apply strong{color:var(--emerald);display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.apply.cyan{border-left-color:var(--cyan)}
+.apply.cyan strong{color:var(--cyan)}
+
+/* Fields */
+label.f{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+.hint{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
+textarea,input[type=text]{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px;min-height:44px;resize:vertical}
+textarea{min-height:76px}
+textarea:focus,input[type=text]:focus{border-color:var(--cyan);outline:none;box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+::placeholder{color:#64748B}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 18px;border-radius:10px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;border:1px solid transparent;transition:transform .12s ease,filter .12s ease}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-danger{background:transparent;color:var(--rose);border-color:rgba(244,63,94,.45)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+
+/* Picture mapper */
+.frames{display:grid;grid-template-columns:1fr;gap:10px;align-items:stretch}
+@media(min-width:760px){.frames{grid-template-columns:1fr 34px 1fr 34px 1fr}}
+.frame{position:relative;border-radius:12px;padding:10px;background:linear-gradient(145deg,#3a3a3a,#1b1b1b);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06),0 6px 18px rgba(0,0,0,.35)}
+.frame-inner{background:var(--panel-2);border-radius:8px;padding:12px;height:100%;display:flex;flex-direction:column;border:1px solid var(--border)}
+.frame .ftitle{font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
+.frame .fq{font-size:13px;color:var(--muted);margin:0 0 8px}
+.frame textarea{flex:1;min-height:110px;font-size:14px}
+.frame .ex{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic}
+.frame .photo{transition:filter .8s ease,opacity .8s ease;filter:grayscale(1) blur(.6px);opacity:.72}
+.frame.developed .photo{filter:none;opacity:1}
+.frame.survival{background:linear-gradient(145deg,#5b4318,#2a2010)}
+.frame.survival .ftitle{color:var(--amber)}
+.frame.cost{background:linear-gradient(145deg,#5a1f2b,#2a1016)}
+.frame.cost .ftitle{color:var(--rose)}
+.frame.strengths{background:linear-gradient(145deg,#0f5a45,#0b2a22)}
+.frame.strengths .ftitle{color:var(--emerald)}
+.frame.strengths.developed{box-shadow:0 0 0 2px rgba(16,185,129,.5),0 0 28px rgba(16,185,129,.35)}
+.frame .tag{position:absolute;top:-9px;right:12px;font-size:11px;font-weight:700;background:var(--bg);border:1px solid var(--border);border-radius:99px;padding:1px 8px;color:var(--muted)}
+.frame.developed .tag{color:var(--emerald);border-color:rgba(16,185,129,.5)}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--border);font-size:24px;font-weight:800;transform:rotate(90deg);transition:color .3s}
+@media(min-width:760px){.arrow{transform:none}}
+.arrow.on{color:var(--cyan)}
+.arrow.pulse{animation:pulse .9s ease}
+@keyframes pulse{0%{transform:scale(1) rotate(90deg);color:var(--border)}50%{transform:scale(1.5) rotate(90deg);color:var(--cyan)}100%{transform:scale(1) rotate(90deg);color:var(--cyan)}}
+@media(min-width:760px){@keyframes pulse{0%{transform:scale(1);color:var(--border)}50%{transform:scale(1.5);color:var(--cyan)}100%{transform:scale(1);color:var(--cyan)}}}
+.shift{margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(135deg,rgba(34,211,238,.1),rgba(16,185,129,.12));border:1px solid rgba(16,185,129,.4);display:none}
+.shift.show{display:block;animation:fadeUp .6s ease}
+.shift b{color:var(--emerald)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg{font-size:13px;color:var(--amber);margin-top:8px;min-height:1em}
+
+/* Chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.pick{min-height:40px;padding:8px 14px;border-radius:99px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
+.pick:hover{border-color:var(--cyan)}
+.pick[aria-pressed="true"]{background:rgba(16,185,129,.18);border-color:var(--emerald);color:#A7F3D0;font-weight:700}
+.pick[disabled]{opacity:.4;cursor:not-allowed}
+.inline{display:flex;gap:8px;margin-top:8px}
+.inline input{flex:1}
+.counter{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* Alter ego card */
+.ae-grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:760px){.ae-grid{grid-template-columns:1.1fr 1fr}}
+.themes{display:flex;gap:8px;margin-top:6px}
+.swatch{width:44px;height:44px;border-radius:50%;border:2px solid var(--border);cursor:pointer}
+.swatch[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
+.sw-cyan{background:linear-gradient(135deg,#22D3EE,#0EA5E9)}
+.sw-emerald{background:linear-gradient(135deg,#10B981,#34D399)}
+.sw-violet{background:linear-gradient(135deg,#A78BFA,#6366F1)}
+.ae-card-outer{position:sticky;top:64px;align-self:start}
+.ae-card{--c1:#22D3EE;--c2:#10B981;padding:3px;border-radius:18px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.ae-card.theme-emerald{--c1:#10B981;--c2:#A3E635}
+.ae-card.theme-violet{--c1:#A78BFA;--c2:#6366F1}
+.ae-card .inner{background:radial-gradient(circle at 85% 0%,rgba(255,255,255,.06),transparent 55%),#0B1222;border-radius:15px;padding:18px}
+.ae-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ae-seal{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));color:#0B1222;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ae-name{font-size:28px;font-weight:900;line-height:1.1;margin:12px 0 10px;background:linear-gradient(135deg,var(--c1),var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent;word-break:break-word}
+.ae-traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ae-traits span{font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1px solid var(--c1);color:var(--text)}
+.ae-traits span.empty{border-style:dashed;color:var(--muted);border-color:var(--border)}
+.ae-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--c1);margin:10px 0 2px;font-weight:700}
+.ae-text{font-size:14px;margin:0;word-break:break-word}
+.ae-text.empty{color:#64748B;font-style:italic}
+.ae-foot{margin-top:14px;padding-top:10px;border-top:1px dashed var(--border);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+
+/* Scenario */
+.scenario{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.scenario b{color:var(--amber)}
+
+/* Quiz */
+.q{border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;background:var(--panel-2)}
+.q p.qt{margin:0 0 10px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit;font-size:15px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not([disabled]){border-color:var(--cyan)}
+.opt .l{font-weight:800;color:var(--cyan);flex:0 0 auto}
+.opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.14)}
+.opt.correct .l{color:var(--emerald)}
+.opt.wrong{border-color:var(--rose);background:rgba(244,63,94,.12)}
+.opt.wrong .l{color:var(--rose)}
+.opt[disabled]{cursor:default}
+.explain{margin-top:10px;font-size:14px;color:var(--muted)}
+.explain.ok{color:#A7F3D0}
+.explain.no{color:#FECDD3}
+.score{font-size:18px;font-weight:800}
+.score span{color:var(--emerald)}
+
+/* Summary */
+.challenge{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(34,211,238,.06));border:1px solid rgba(245,158,11,.35);border-radius:12px;padding:14px;margin-bottom:14px}
+.challenge h3{margin:0 0 6px;color:var(--amber)}
+.challenge ol{margin:0;padding-left:20px}
+.challenge li{margin-bottom:4px}
+pre.sum{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;max-height:420px;overflow:auto;margin:0}
+.toast{font-size:14px;color:var(--emerald);min-height:1.2em;margin-top:8px}
+
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 24px}
+
+@media(max-width:639px){
+  h1{font-size:22px}
+  .badge{width:52px;height:52px;font-size:26px}
+  .btn{flex:1 1 100%}
+  .ae-card-outer{position:static}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .progress-wrap,.btn-row,.btn,.chips,.themes,.inline,.opts,.msg,.toast,.arrow,textarea,input,.counter{display:none!important}
+  .card,.frame-inner,.scenario,.q,.challenge,.apply{background:#fff!important;border:1px solid #999!important;color:#000!important;box-shadow:none!important}
+  .frame{background:#fff!important;box-shadow:none!important;padding:0}
+  .frame .photo{filter:none!important;opacity:1!important}
+  .lead,.summary,.hint,.explain,.ex,.fq,.ae-head,.ae-foot{color:#333!important}
+  .subtitle,.chip,.apply strong,.ftitle{color:#000!important}
+  .badge{box-shadow:none;border:2px solid #000;background:#fff;color:#000}
+  .ae-card{background:#000!important;box-shadow:none}
+  .ae-card .inner{background:#fff!important;color:#000}
+  .ae-name{color:#000!important;-webkit-text-fill-color:#000;background:none}
+  .ae-label{color:#000!important}
+  .ae-traits span{color:#000;border-color:#000}
+  .ae-card-outer{position:static}
+  pre.sum{background:#fff;color:#000;border:1px solid #999;max-height:none;overflow:visible}
+  .print-hide{display:none!important}
+  .shift{display:block;background:#fff;border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="badge" aria-hidden="true">P</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 5 of 7</p>
+      <h1>P — Pictures</h1>
+      <p class="subtitle">Survival, Cost &amp; Strengths • The Alter Ego Blueprint</p>
+      <p class="summary">The brain thinks in pictures, so you can rewrite old self-stories by mapping your Survival Picture, your Cost Picture, and your Strengths Picture. Then you build an Alter Ego—a steady, courageous action persona with three core traits and a planned bounce-back reaction—that keeps your self-worth separate from your day-to-day results.</p>
+    </div>
+  </header>
+
+  <div class="progress-wrap" role="region" aria-label="Progress">
+    <div class="progress-label"><span>Your progress</span><span id="progText">0% complete</span></div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progBar"><span id="progFill"></span></div>
+  </div>
+
+  <!-- STEP 1A: Three Pictures -->
+  <section class="card" aria-labelledby="s1h">
+    <span class="chip">Step 1 · Yourself</span>
+    <h2 id="s1h">The Three Pictures</h2>
+    <div class="apply">
+      <strong>How to Apply It to Yourself</strong>
+      Rewrite negative self-stories using three pictures: your <b>Survival Picture</b> (old habits built just to feel safe), your <b>Cost Picture</b> (what holding back or reacting out of fear costs you), and your <b>Strengths Picture</b> (channeling that same energy into calm focus and decisive problem-solving).
+    </div>
+    <p class="lead">Fill in each frame. Watch each picture develop from grey to full color as you write.</p>
+
+    <div class="frames">
+      <div class="frame survival" id="fr-survival">
+        <span class="tag" data-tag>Developing…</span>
+        <div class="frame-inner photo">
+          <p class="ftitle">1 · Survival Picture</p>
+          <p class="fq">What old habit did you build just to stay safe or comfortable?</p>
+          <label class="f" for="survival" style="position:absolute;left:-9999px">My Survival Picture</label>
+          <textarea id="survival" data-key="survival" placeholder="e.g., When someone criticizes me, I get defensive and over-explain everything."></textarea>
+          <p class="ex">Example: "I stay quiet and agree with everyone so no one gets upset with me."</p>
+        </div>
+      </div>
+      <div class="arrow" id="arr1" aria-hidden="true">→</div>
+      <div class="frame cost" id="fr-cost">
+        <span class="tag" data-tag>Developing…</span>
+        <div class="frame-inner photo">
+          <p class="ftitle">2 · Cost Picture</p>
+          <p class="fq">What does that habit actually cost you?</p>
+          <label class="f" for="cost" style="position:absolute;left:-9999px">My Cost Picture</label>
+          <textarea id="cost" data-key="cost" placeholder="e.g., People stop giving me honest feedback, I miss chances to improve, and conversations turn into arguments."></textarea>
+          <p class="ex">Example: "My ideas never get heard, I get stuck with extra work, and I go home resentful."</p>
+        </div>
+      </div>
+      <div class="arrow" id="arr2" aria-hidden="true">→</div>
+      <div class="frame strengths" id="fr-strengths">
+        <span class="tag" data-tag>Developing…</span>
+        <div class="frame-inner photo">
+          <p class="ftitle">3 · Strengths Picture</p>
+          <p class="fq">How can the same energy behind that habit become a strength?</p>
+          <label class="f" for="strengths" style="position:absolute;left:-9999px">My Strengths Picture</label>
+          <textarea id="strengths" data-key="strengths" placeholder="e.g., I care deeply about doing good work. I can channel that into saying, 'Thanks—tell me more,' and then fixing it fast."></textarea>
+          <p class="ex">Example: "My care for others means I notice what people need—I can use that to speak up clearly."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="transformBtn">✨ Transform My Picture</button>
+    </div>
+    <p class="msg" id="transformMsg" aria-live="polite"></p>
+    <div class="shift" id="shiftBox" aria-live="polite">
+      <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">My Picture Shift</div>
+      <div id="shiftText"></div>
+    </div>
+  </section>
+
+  <!-- STEP 1B: Alter Ego -->
+  <section class="card" aria-labelledby="s1bh">
+    <span class="chip">Step 1 · Yourself</span>
+    <h2 id="s1bh">The Alter Ego Blueprint</h2>
+    <div class="apply cyan">
+      <strong>What Is an Alter Ego?</strong>
+      An Alter Ego is a confident, fearless mindset you step into the moment it is time to perform or lead. It separates your personal self-worth from your day-to-day results so you can speak up clearly, make decisive choices, and stay resilient without taking criticism personally.
+    </div>
+    <p class="lead">Name your action persona, pick three core traits, and script how it responds right away to a setback. Your card updates as you type.</p>
+
+    <div class="ae-grid">
+      <div>
+        <label class="f" for="aeName">1. Action Alter Ego Name</label>
+        <input type="text" id="aeName" data-key="aeName" maxlength="40" placeholder="e.g., The Anchor / The Trailblazer / Steady Hand">
+        <div class="chips" id="nameChips" aria-label="Name suggestions"></div>
+
+        <label class="f" id="traitsLbl">2. Three Core Traits <span class="hint">Pick exactly 3 (non-negotiable). e.g., Calm, Clear, Relentless</span></label>
+        <div class="chips" id="traitChips" role="group" aria-labelledby="traitsLbl"></div>
+        <div class="inline">
+          <input type="text" id="customTrait" maxlength="20" placeholder="Add your own trait…" aria-label="Custom trait">
+          <button type="button" class="btn btn-secondary" id="addTrait">Add</button>
+        </div>
+        <p class="counter" id="traitCount" aria-live="polite">0 / 3 traits picked</p>
+
+        <label class="f" for="aeSetback">3. Setback Reaction <span class="hint">Exactly how this Alter Ego reacts to a mistake</span></label>
+        <textarea id="aeSetback" data-key="aeSetback" placeholder="e.g., Zero drooping shoulders—one slow breath and immediate 5-second shift to the next constructive step"></textarea>
+
+        <label class="f" for="aeMoment">4. My Switch-On Moment <span class="hint">When will you step into your Alter Ego?</span></label>
+        <input type="text" id="aeMoment" data-key="aeMoment" placeholder="e.g., Right before my weekly one-on-one with my manager">
+
+        <label class="f" for="aeSignal">5. My Switch-On Signal <span class="hint">What small action turns it on?</span></label>
+        <input type="text" id="aeSignal" data-key="aeSignal" placeholder="e.g., Straightening my posture and pressing my thumb and finger together">
+
+        <label class="f" id="themeLbl">Card color</label>
+        <div class="themes" role="group" aria-labelledby="themeLbl">
+          <button type="button" class="swatch sw-cyan" data-theme="cyan" aria-label="Cyan card" aria-pressed="true"></button>
+          <button type="button" class="swatch sw-emerald" data-theme="emerald" aria-label="Emerald card" aria-pressed="false"></button>
+          <button type="button" class="swatch sw-violet" data-theme="violet" aria-label="Violet card" aria-pressed="false"></button>
+        </div>
+      </div>
+
+      <div class="ae-card-outer">
+        <div class="ae-card" id="aeCard" aria-label="Your Alter Ego card preview">
+          <div class="inner">
+            <div class="ae-head"><span>Alter Ego Blueprint</span><span class="ae-seal">P</span></div>
+            <div class="ae-name" id="cName">Your Alter Ego</div>
+            <div class="ae-traits" id="cTraits"></div>
+            <p class="ae-label">Setback Reaction</p>
+            <p class="ae-text" id="cSetback"></p>
+            <p class="ae-label">Switch On</p>
+            <p class="ae-text" id="cSwitch"></p>
+            <div class="ae-foot"><span>SYNAPSE™ • Pictures</span><span>Self-worth ≠ results</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: Others -->
+  <section class="card" aria-labelledby="s2h">
+    <span class="chip">Step 2 · Others</span>
+    <h2 id="s2h">Helping Someone See Their Strengths Picture</h2>
+    <div class="apply">
+      <strong>How to Apply It to Others</strong>
+      When someone loses their cool, snaps at someone else, or hangs their head after a mistake, help them see their Strengths Picture. Don't lecture them; call out what they are capable of when they channel their heart and energy into helping the group move forward.
+    </div>
+    <div class="scenario">
+      <b>Real-Life Scenario:</b> During a family move, your younger sister Mia is in charge of packing the kitchen. A box she packed breaks, and several dishes shatter. She snaps, "I can't do anything right!" and storms off to her room. Your parents are already stressed, and someone mutters, "Typical."
+    </div>
+    <label class="f" for="oStrength">1. The strength you see underneath their reaction</label>
+    <textarea id="oStrength" data-key="oStrength" placeholder="e.g., She's frustrated because she really cares about doing it right and helping the family."></textarea>
+    <label class="f" for="oWords">2. The exact words you'll use to point it out</label>
+    <textarea id="oWords" data-key="oWords" placeholder="e.g., Hey, the reason you're this upset is because you care a lot about helping us. That's exactly what we need right now."></textarea>
+    <label class="f" for="oInvite">3. One way to invite them back into solving the problem together</label>
+    <textarea id="oInvite" data-key="oInvite" placeholder="e.g., Want to be in charge of double-taping the rest of the boxes? You're the most careful packer we've got."></textarea>
+  </section>
+
+  <!-- STEP 3: Quiz -->
+  <section class="card" aria-labelledby="s3h">
+    <span class="chip">Step 3 · Knowledge Check</span>
+    <h2 id="s3h">Quick Knowledge Check</h2>
+    <p class="lead">Tap the best answer for each everyday scenario.</p>
+    <div id="quiz"></div>
+    <div class="btn-row" style="align-items:center">
+      <div class="score" id="score" aria-live="polite">Score: <span>0</span> / 3</div>
+      <button type="button" class="btn btn-secondary" id="retryQuiz">↻ Retry quiz</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: Summary -->
+  <section class="card" aria-labelledby="s4h">
+    <span class="chip">Step 4 · Your Summary</span>
+    <h2 id="s4h">Your Pictures Summary</h2>
+    <div class="challenge">
+      <h3>🎯 Try This Today: Switch On Your Alter Ego Once</h3>
+      <ol>
+        <li><b>Pick one moment</b> in the next 24 hours that usually makes you hold back—speaking up in a meeting, setting a boundary, making a phone call you've been avoiding.</li>
+        <li><b>Right before it</b>, use your Switch-On Signal and say your Alter Ego name in your head ("Okay, Anchor").</li>
+        <li><b>Act with your 3 traits.</b> If anything goes wrong, use your scripted Setback Reaction within 5 seconds.</li>
+        <li><b>Afterward</b>, write one line: "My Alter Ego did ______, and it felt ______."</li>
+        <li><b>Bonus:</b> Name one person's Strengths Picture out loud today ("You're great at ______").</li>
+      </ol>
+    </div>
+    <pre class="sum" id="summary" tabindex="0" aria-label="Summary text"></pre>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="copyBtn">📋 Copy Summary</button>
+      <button type="button" class="btn btn-secondary" id="printBtn">🖨️ Print / Save as PDF</button>
+      <button type="button" class="btn btn-danger" id="resetBtn">Start Over</button>
+    </div>
+    <p class="toast" id="toast" aria-live="polite"></p>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var KEY = 'synapse-05-pictures';
+  var NAMES = ['The Anchor','The Trailblazer','Steady Hand','The Lighthouse','Clear Signal'];
+  var BASE_TRAITS = ['Calm','Clear','Relentless','Bold','Steady','Kind','Decisive','Patient','Focused','Brave','Warm','Direct'];
+  var QUIZ = [
+    {q:'Taylor always agrees with whatever the group decides, even when she has a better idea, because it keeps things peaceful. In the Three Pictures model, this habit is Taylor\'s:',
+     o:['Strengths Picture','Cost Picture','Survival Picture','Alter Ego'], a:2,
+     e:'A Survival Picture is an old habit built just to feel safe or comfortable.'},
+    {q:'What is the main purpose of an Alter Ego in SYNAPSE?',
+     o:['To pretend to be someone you\'re not so people like you more.','To separate your self-worth from your day-to-day results so you can act clearly and bounce back from mistakes.','To avoid taking responsibility for mistakes.','To replace your real personality permanently.'], a:1,
+     e:'An Alter Ego is a steady action persona that keeps your personal self-worth separate from everyday performance and feedback.'},
+    {q:'A coworker snaps in frustration after their idea is rejected in a meeting. Which response best helps them see their Strengths Picture?',
+     o:['"You need to calm down and stop overreacting."','"It\'s not a big deal; just forget about it."','"You fight hard for ideas because you care about getting this right—let\'s use that energy to strengthen the plan for next time."','Ignore them until they cool off on their own.'], a:2,
+     e:'Instead of lecturing, you point out the strength underneath their reaction and invite them to channel it into solving the problem.'}
+  ];
+  var CHALLENGE = [
+    '1. Pick one moment in the next 24 hours that usually makes you hold back—speaking up in a meeting, setting a boundary, making a phone call you\'ve been avoiding.',
+    '2. Right before it, use your Switch-On Signal and say your Alter Ego name in your head ("Okay, Anchor").',
+    '3. Act with your 3 traits. If anything goes wrong, use your scripted Setback Reaction within 5 seconds.',
+    '4. Afterward, write one line: "My Alter Ego did ______, and it felt ______."',
+    '5. Bonus: Name one person\'s Strengths Picture out loud today ("You\'re great at ______").'
+  ];
+
+  var state = {fields:{}, traits:[], custom:[], theme:'cyan', transformed:false, quiz:[null,null,null]};
+
+  function $(id){ return document.getElementById(id); }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw){
+        var s = JSON.parse(raw);
+        if(s && typeof s === 'object'){
+          state.fields = s.fields || {};
+          state.traits = Array.isArray(s.traits) ? s.traits.slice(0,3) : [];
+          state.custom = Array.isArray(s.custom) ? s.custom : [];
+          state.theme = ['cyan','emerald','violet'].indexOf(s.theme) > -1 ? s.theme : 'cyan';
+          state.transformed = !!s.transformed;
+          state.quiz = Array.isArray(s.quiz) && s.quiz.length === 3 ? s.quiz : [null,null,null];
+        }
+      }
+    }catch(e){}
+  }
+  function postHeight(){
+    try{ window.parent.postMessage({type:'synapse-widget-height', height: document.documentElement.scrollHeight}, '*'); }catch(e){}
+  }
+  function val(k){ return (state.fields[k] || '').trim(); }
+  function el(tag, cls, text){ var n = document.createElement(tag); if(cls) n.className = cls; if(text != null) n.textContent = text; return n; }
+  function shorten(s, n){ s = s.replace(/\s+/g,' ').trim(); return s.length > n ? s.slice(0, n-1).trim() + '…' : s; }
+
+  /* Fields */
+  var fieldEls = document.querySelectorAll('[data-key]');
+  function bindFields(){
+    Array.prototype.forEach.call(fieldEls, function(f){
+      var k = f.getAttribute('data-key');
+      if(state.fields[k]) f.value = state.fields[k];
+      f.addEventListener('input', function(){
+        state.fields[k] = f.value;
+        if(k === 'survival' || k === 'strengths' || k === 'cost'){
+          if(state.transformed) renderShift();
+        }
+        update();
+      });
+    });
+  }
+
+  /* Frames */
+  function renderFrames(){
+    [['survival','fr-survival'],['cost','fr-cost'],['strengths','fr-strengths']].forEach(function(p){
+      var fr = $(p[1]); var done = val(p[0]).length > 0;
+      fr.classList.toggle('developed', done);
+      fr.querySelector('[data-tag]').textContent = done ? '✓ Developed' : 'Developing…';
+    });
+    $('arr1').classList.toggle('on', state.transformed);
+    $('arr2').classList.toggle('on', state.transformed);
+  }
+  function renderShift(){
+    var box = $('shiftBox'), t = $('shiftText');
+    t.textContent = '';
+    if(!state.transformed){ box.classList.remove('show'); return; }
+    var b1 = el('b', null, 'From '); var s1 = el('span', null, '"' + shorten(val('survival'), 120) + '"');
+    var ar = el('b', null, '  →  to '); var s2 = el('span', null, '"' + shorten(val('strengths'), 120) + '"');
+    t.appendChild(b1); t.appendChild(s1); t.appendChild(ar); t.appendChild(s2);
+    box.classList.add('show');
+  }
+  $('transformBtn').addEventListener('click', function(){
+    var msg = $('transformMsg');
+    if(!val('survival') || !val('cost') || !val('strengths')){
+      msg.textContent = 'Fill in all three pictures first—Survival, Cost, and Strengths—then transform.';
+      return;
+    }
+    msg.textContent = '';
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var a1 = $('arr1'), a2 = $('arr2');
+    a1.classList.remove('pulse'); a2.classList.remove('pulse');
+    void a1.offsetWidth;
+    if(reduce){ finish(); return; }
+    a1.classList.add('pulse');
+    setTimeout(function(){ a2.classList.add('pulse'); }, 450);
+    setTimeout(finish, 950);
+    function finish(){ state.transformed = true; renderShift(); update(); }
+  });
+
+  /* Name chips */
+  function buildNameChips(){
+    var wrap = $('nameChips');
+    NAMES.forEach(function(n){
+      var b = el('button','pick', n); b.type = 'button';
+      b.addEventListener('click', function(){
+        $('aeName').value = n; state.fields.aeName = n; update();
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  /* Traits */
+  function allTraits(){ return BASE_TRAITS.concat(state.custom.filter(function(t){ return BASE_TRAITS.indexOf(t) === -1; })); }
+  function renderTraits(){
+    var wrap = $('traitChips'); wrap.textContent = '';
+    var full = state.traits.length >= 3;
+    allTraits().forEach(function(t){
+      var on = state.traits.indexOf(t) > -1;
+      var b = el('button','pick', t); b.type = 'button';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if(full && !on) b.disabled = true;
+      b.addEventListener('click', function(){
+        var i = state.traits.indexOf(t);
+        if(i > -1) state.traits.splice(i,1);
+        else if(state.traits.length < 3) state.traits.push(t);
+        update();
+        var again = Array.prototype.filter.call($('traitChips').children, function(c){ return c.textContent === t; })[0];
+        if(again) again.focus();
+      });
+      wrap.appendChild(b);
+    });
+    $('traitCount').textContent = state.traits.length + ' / 3 traits picked' + (full ? ' ✓' : '');
+  }
+  function addCustom(){
+    var inp = $('customTrait');
+    var v = inp.value.replace(/\s+/g,' ').trim();
+    if(!v) return;
+    v = v.charAt(0).toUpperCase() + v.slice(1);
+    var exists = allTraits().filter(function(t){ return t.toLowerCase() === v.toLowerCase(); })[0];
+    if(!exists){ state.custom.push(v); exists = v; }
+    if(state.traits.indexOf(exists) === -1 && state.traits.length < 3) state.traits.push(exists);
+    inp.value = '';
+    update();
+  }
+  $('addTrait').addEventListener('click', addCustom);
+  $('customTrait').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); addCustom(); } });
+
+  /* Theme */
+  var swatches = document.querySelectorAll('.swatch');
+  Array.prototype.forEach.call(swatches, function(s){
+    s.addEventListener('click', function(){ state.theme = s.getAttribute('data-theme'); update(); });
+  });
+  function renderCard(){
+    var card = $('aeCard');
+    card.className = 'ae-card theme-' + state.theme;
+    Array.prototype.forEach.call(swatches, function(s){ s.setAttribute('aria-pressed', s.getAttribute('data-theme') === state.theme ? 'true' : 'false'); });
+    $('cName').textContent = val('aeName') || 'Your Alter Ego';
+    var tw = $('cTraits'); tw.textContent = '';
+    for(var i=0;i<3;i++){
+      var t = state.traits[i];
+      tw.appendChild(el('span', t ? '' : 'empty', t || 'Trait ' + (i+1)));
+    }
+    var sb = $('cSetback'); var sv = val('aeSetback');
+    sb.textContent = sv || 'One slow breath and an immediate constructive next step within 5 seconds…';
+    sb.className = 'ae-text' + (sv ? '' : ' empty');
+    var sw = $('cSwitch'); var m = val('aeMoment'), g = val('aeSignal');
+    var line = '';
+    if(m && g) line = 'When: ' + m + ' • Signal: ' + g;
+    else if(m) line = 'When: ' + m;
+    else if(g) line = 'Signal: ' + g;
+    sw.textContent = line || 'Your switch-on moment and signal…';
+    sw.className = 'ae-text' + (line ? '' : ' empty');
+  }
+
+  /* Quiz */
+  var L = ['A','B','C','D'];
+  function renderQuiz(){
+    var wrap = $('quiz'); wrap.textContent = '';
+    QUIZ.forEach(function(item, qi){
+      var box = el('div','q');
+      box.appendChild(el('p','qt', (qi+1) + '. ' + item.q));
+      var opts = el('div','opts'); opts.setAttribute('role','group'); opts.setAttribute('aria-label','Question ' + (qi+1) + ' options');
+      var chosen = state.quiz[qi];
+      item.o.forEach(function(o, oi){
+        var b = el('button','opt'); b.type = 'button';
+        b.appendChild(el('span','l', L[oi] + ')'));
+        b.appendChild(el('span', null, o));
+        if(chosen !== null){
+          b.disabled = true;
+          if(oi === item.a) b.classList.add('correct');
+          else if(oi === chosen) b.classList.add('wrong');
+        }
+        b.addEventListener('click', function(){
+          if(state.quiz[qi] !== null) return;
+          state.quiz[qi] = oi; update();
+        });
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+      var ex = el('p','explain'); ex.setAttribute('aria-live','polite');
+      if(chosen !== null){
+        var ok = chosen === item.a;
+        ex.className = 'explain ' + (ok ? 'ok' : 'no');
+        ex.textContent = (ok ? '✓ Correct. ' : '✗ Not quite — the answer is ' + L[item.a] + '. ') + item.e;
+      }
+      box.appendChild(ex);
+      wrap.appendChild(box);
+    });
+    $('score').querySelector('span').textContent = String(quizScore());
+  }
+  function quizScore(){ var s=0; state.quiz.forEach(function(c,i){ if(c === QUIZ[i].a) s++; }); return s; }
+  function quizDone(){ return state.quiz.every(function(c){ return c !== null; }); }
+  $('retryQuiz').addEventListener('click', function(){ state.quiz = [null,null,null]; update(); });
+
+  /* Progress */
+  function progress(){
+    var sections = [
+      !!(val('survival') && val('cost') && val('strengths')),
+      state.transformed,
+      !!(val('aeName') && state.traits.length === 3 && val('aeSetback')),
+      !!(val('oStrength') && val('oWords') && val('oInvite')),
+      quizDone()
+    ];
+    var done = sections.filter(Boolean).length;
+    var pct = Math.round(done / sections.length * 100);
+    $('progFill').style.width = pct + '%';
+    $('progText').textContent = pct + '% complete';
+    $('progBar').setAttribute('aria-valuenow', String(pct));
+  }
+
+  /* Summary */
+  function line(label, v){ return label + ': ' + (v || '—'); }
+  function buildSummary(){
+    var out = [];
+    out.push('SYNAPSE™ LIFE & PERFORMANCE — PILLAR 5 of 7');
+    out.push('P — PICTURES: Survival, Cost & Strengths • The Alter Ego Blueprint');
+    out.push('Date: ' + new Date().toLocaleDateString());
+    out.push('');
+    out.push('— THE THREE PICTURES —');
+    out.push(line('Survival Picture', val('survival')));
+    out.push(line('Cost Picture', val('cost')));
+    out.push(line('Strengths Picture', val('strengths')));
+    if(state.transformed && val('survival') && val('strengths')){
+      out.push('My Picture Shift: From "' + shorten(val('survival'),120) + '" → to "' + shorten(val('strengths'),120) + '"');
+    }
+    out.push('');
+    out.push('— MY ALTER EGO CARD —');
+    out.push(line('Alter Ego Name', val('aeName')));
+    out.push(line('Three Core Traits', state.traits.join(', ')));
+    out.push(line('Setback Reaction', val('aeSetback')));
+    out.push(line('Switch-On Moment', val('aeMoment')));
+    out.push(line('Switch-On Signal', val('aeSignal')));
+    out.push('');
+    out.push('— HELPING OTHERS SEE THEIR STRENGTHS PICTURE —');
+    out.push(line('The strength I see', val('oStrength')));
+    out.push(line('My exact words', val('oWords')));
+    out.push(line('My invitation to solve it together', val('oInvite')));
+    out.push('');
+    out.push('— KNOWLEDGE CHECK —');
+    out.push('Score: ' + quizScore() + ' / 3' + (quizDone() ? '' : ' (in progress)'));
+    out.push('');
+    out.push('— TRY THIS TODAY: SWITCH ON YOUR ALTER EGO ONCE —');
+    CHALLENGE.forEach(function(c){ out.push(c); });
+    return out.join('\n');
+  }
+
+  function update(){
+    renderFrames();
+    renderTraits();
+    renderCard();
+    renderQuiz();
+    renderShift();
+    progress();
+    $('summary').textContent = buildSummary();
+    save();
+    postHeight();
+  }
+
+  /* Copy / Print / Reset */
+  function toast(t){ var n = $('toast'); n.textContent = t; clearTimeout(toast._t); toast._t = setTimeout(function(){ n.textContent = ''; postHeight(); }, 4000); }
+  function selectSummary(){
+    try{
+      var r = document.createRange(); r.selectNodeContents($('summary'));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    }catch(e){}
+  }
+  function fallbackCopy(text){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){ return false; }
+  }
+  $('copyBtn').addEventListener('click', function(){
+    var text = buildSummary();
+    function fail(){
+      if(fallbackCopy(text)){ toast('✓ Summary copied to your clipboard.'); }
+      else { selectSummary(); toast('Summary selected — press Ctrl/Cmd+C to copy.'); }
+    }
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(function(){ toast('✓ Summary copied to your clipboard.'); }, fail);
+      } else fail();
+    }catch(e){ fail(); }
+  });
+  $('printBtn').addEventListener('click', function(){ try{ window.print(); }catch(e){} });
+  $('resetBtn').addEventListener('click', function(){
+    if(!window.confirm('Start over? This clears all of your answers in this activity.')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    state = {fields:{}, traits:[], custom:[], theme:'cyan', transformed:false, quiz:[null,null,null]};
+    Array.prototype.forEach.call(fieldEls, function(f){ f.value = ''; });
+    $('customTrait').value = '';
+    $('transformMsg').textContent = '';
+    update();
+    toast('Cleared. Fresh start.');
+    window.scrollTo(0,0);
+  });
+
+  /* Init */
+  load();
+  bindFields();
+  buildNameChips();
+  update();
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE — A: Activating the Inner Why</title>
+<style>
+:root{--bg:#0F172A;--panel:#1E293B;--panel-2:#162033;--border:#334155;--text:#E2E8F0;--muted:#94A3B8;--cyan:#22D3EE;--emerald:#10B981;--amber:#F59E0B;--rose:#F43F5E;--radius:14px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:16px}
+@media(min-width:640px){.wrap{padding:28px}}
+header.hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+.badge{flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#10B981);color:#0F172A;font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(34,211,238,.25)}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+h1{margin:0 0 4px;font-size:clamp(22px,4vw,30px);line-height:1.2}
+.subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+.summary-text{color:var(--muted);margin:0}
+.progress{position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 0 10px;margin-bottom:14px}
+.progress-track{height:6px;border-radius:999px;background:var(--panel);overflow:hidden;border:1px solid var(--border)}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+.progress-label{font-size:12px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+@media(min-width:640px){.card{padding:24px}}
+.chip-step{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bg);background:linear-gradient(135deg,var(--cyan),var(--emerald));padding:4px 10px;border-radius:999px;margin-bottom:10px}
+h2{margin:0 0 6px;font-size:20px}
+h3{margin:18px 0 8px;font-size:16px;color:var(--cyan)}
+p{margin:0 0 10px}
+.muted{color:var(--muted)}
+.apply{background:var(--panel-2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 14px;margin:10px 0 16px;font-size:14.5px}
+.apply.others{border-left-color:var(--emerald)}
+.apply strong{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;color:var(--cyan)}
+.apply.others strong{color:var(--emerald)}
+label{display:block;font-weight:600;margin:12px 0 6px;font-size:14.5px}
+.hint{font-weight:400;color:var(--muted);font-size:13px}
+textarea,input[type=text]{width:100%;background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;font-size:15px;min-height:46px;resize:vertical}
+textarea{min-height:76px}
+textarea::placeholder,input::placeholder{color:#64748B}
+textarea:focus,input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button{font:inherit;cursor:pointer}
+.btn{min-height:44px;padding:10px 18px;border-radius:10px;font-weight:700;font-size:15px;border:1px solid transparent;transition:transform .15s ease,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-danger{background:transparent;color:var(--rose);border-color:rgba(244,63,94,.5)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+/* NAME tiles */
+.name-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:639px){.name-grid{grid-template-columns:1fr}}
+.tile{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px;transition:border-color .3s,box-shadow .3s}
+.tile.filled{border-color:var(--emerald);box-shadow:0 0 0 1px var(--emerald),0 6px 20px rgba(16,185,129,.15)}
+.tile-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.tile-letter{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;background:var(--panel);border:1px solid var(--border);color:var(--muted);transition:all .3s}
+.tile.filled .tile-letter{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A;border-color:transparent}
+.tile-name{font-weight:700}
+.tile label{margin-top:6px;font-weight:500;color:var(--muted);font-size:14px}
+.anchor{margin-top:16px;border-radius:12px;padding:16px;background:linear-gradient(135deg,rgba(34,211,238,.10),rgba(16,185,129,.10));border:1px solid rgba(34,211,238,.35)}
+.anchor-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:6px}
+.anchor-line{font-size:17px;font-style:italic;min-height:1.6em}
+.anchor-line.empty{color:var(--muted);font-style:normal;font-size:15px}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.chip{min-height:44px;padding:8px 14px;border-radius:999px;background:var(--panel-2);border:1px solid var(--border);color:var(--text);font-size:14.5px;transition:all .2s}
+.chip:hover{border-color:var(--cyan)}
+.chip[aria-pressed="true"]{background:rgba(16,185,129,.15);border-color:var(--emerald);color:#A7F3D0}
+.chip:disabled{opacity:.4;cursor:not-allowed}
+.composed{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--panel-2);border:1px dashed var(--border);font-weight:600}
+.composed.empty{color:var(--muted);font-weight:400}
+/* practice */
+.practice{margin-top:12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);padding:16px;text-align:center;display:none}
+.practice.on{display:block}
+.ring{width:96px;height:96px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:var(--cyan);border:4px solid var(--cyan);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,211,238,.4)}50%{transform:scale(1.06);box-shadow:0 0 0 12px rgba(34,211,238,0)}}
+.practice-step{font-size:17px;font-weight:600}
+/* cue */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:639px){.slots{grid-template-columns:1fr}}
+.slot input{text-align:center;font-weight:700}
+.slot .slot-label{font-size:12px;color:var(--muted);text-align:center;margin-bottom:4px}
+.slot.active input{border-color:var(--cyan)}
+.cue-preview{margin-top:14px;text-align:center;font-size:clamp(24px,6vw,40px);font-weight:800;letter-spacing:.02em;background:linear-gradient(135deg,var(--cyan),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent;min-height:1.3em}
+.cue-preview.empty{-webkit-text-fill-color:var(--muted);color:var(--muted);font-size:16px;font-weight:500}
+/* scenario */
+.scenario{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px;font-style:italic}
+/* quiz */
+.q{margin:16px 0;padding:14px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border)}
+.q-text{font-weight:600;margin-bottom:10px}
+.opt{display:block;width:100%;text-align:left;min-height:44px;margin:6px 0;padding:10px 14px;border-radius:10px;background:var(--panel);border:1px solid var(--border);color:var(--text);font-size:15px}
+.opt:hover:not(:disabled){border-color:var(--cyan)}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.15)}
+.opt.wrong{border-color:var(--rose);background:rgba(244,63,94,.12)}
+.explain{margin-top:8px;font-size:14.5px}
+.explain.ok{color:#6EE7B7}
+.explain.no{color:#FDA4AF}
+.score{font-size:18px;font-weight:700;margin-top:8px}
+/* summary */
+pre.summary-out{white-space:pre-wrap;word-wrap:break-word;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;max-height:460px;overflow:auto;color:var(--text)}
+.status{min-height:1.4em;margin-top:8px;color:var(--emerald);font-size:14px}
+.challenge{border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);border-radius:12px;padding:14px;margin-top:10px}
+.challenge strong{color:var(--amber)}
+.challenge ol{margin:6px 0 0;padding-left:20px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 0 24px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff;color:#000}
+  .progress,.btn,.btn-row,.chips,.practice,.no-print{display:none!important}
+  .card{background:#fff;border:1px solid #999;break-inside:avoid;color:#000}
+  .apply,.tile,.q,.scenario,.anchor,.composed,pre.summary-out,textarea,input[type=text]{background:#fff!important;color:#000!important;border-color:#999!important}
+  .subtitle,.anchor-title,h3,.apply strong{color:#000!important}
+  .cue-preview{-webkit-text-fill-color:#000;color:#000;background:none}
+  .muted,.summary-text,.eyebrow{color:#333}
+  .badge{box-shadow:none;border:2px solid #000;background:#fff;color:#000}
+  pre.summary-out{max-height:none;overflow:visible}
+  textarea{min-height:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="badge" aria-hidden="true">A</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 4 of 7</p>
+      <h1>A — Activating the Inner "Why"</h1>
+      <p class="subtitle">NAME Prompts • Physical Reset Routine • 3-Word Focus Cue</p>
+      <p class="summary-text">Outside rewards like praise, titles, and likes run dry when you feel exhausted, overlooked, or behind—real drive has to be uncovered from within. Using the NAME tool, you build a one-line Inner Why anchor, pair it with a quick Physical Reset Routine for mistakes, and lock in a 3-Word Focus Cue for when your mind starts to spin.</p>
+    </div>
+  </header>
+
+  <div class="progress" aria-label="Progress">
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <div class="progress-label"><span id="progText">0% complete</span><span id="progCount">0 of 7 sections</span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="card" aria-labelledby="s1h">
+    <span class="chip-step">Step 1 · Yourself</span>
+    <h2 id="s1h">Build Your Inner Why with N-A-M-E</h2>
+    <div class="apply"><strong>How to Apply It to Yourself</strong>Lasting drive doesn't come from someone pushing or yelling from the outside; it comes from an engine inside your own chest. Putting the four NAME pieces into one simple line gives you a personal anchor when weeks get demanding.</div>
+
+    <div class="name-grid">
+      <div class="tile" data-tile="n">
+        <div class="tile-head"><div class="tile-letter">N</div><div class="tile-name">Necessity</div></div>
+        <label for="n">What will happen to my year or goals if I don't change?</label>
+        <textarea id="n" data-key="n" placeholder="e.g., I will stay stuck watching my own goals pass me by instead of stepping up."></textarea>
+      </div>
+      <div class="tile" data-tile="a">
+        <div class="tile-head"><div class="tile-letter">A</div><div class="tile-name">Aptitude</div></div>
+        <label for="a">What skills have I already proved I can do?</label>
+        <textarea id="a" data-key="a" placeholder="e.g., Staying calm under deadlines and listening carefully when tensions rise."></textarea>
+      </div>
+      <div class="tile" data-tile="m">
+        <div class="tile-head"><div class="tile-letter">M</div><div class="tile-name">Motive</div></div>
+        <label for="m">Who or what am I working hard for?</label>
+        <textarea id="m" data-key="m" placeholder="e.g., To prove to myself that I finish what I start."></textarea>
+      </div>
+      <div class="tile" data-tile="e">
+        <div class="tile-head"><div class="tile-letter">E</div><div class="tile-name">Enjoyment</div></div>
+        <label for="e">What part of this path brings me real joy?</label>
+        <textarea id="e" data-key="e" placeholder="e.g., Seeing a tough idea click into place with people I care about."></textarea>
+      </div>
+    </div>
+
+    <div class="anchor" aria-live="polite">
+      <div class="anchor-title">Your Inner Why Anchor (auto-combined)</div>
+      <div class="anchor-line empty" id="autoLine">Fill in the N-A-M-E tiles above and your anchor will appear here.</div>
+    </div>
+
+    <label for="why">One-Line Inner Why Reminder <span class="hint">— use the auto-line or write your own</span></label>
+    <input type="text" id="why" data-key="why" placeholder="e.g., I keep going because I want to prove to myself that I finish what I start">
+    <div class="btn-row"><button type="button" class="btn btn-secondary" id="useAuto">Use auto-line</button></div>
+
+    <h3>The Physical Reset Routine</h3>
+    <p class="muted">Steady people don't avoid mistakes; they clear them quickly. Tie the release of frustration to one simple, subtle physical action. Pick 1–3 actions:</p>
+    <div class="chips" id="resetChips" role="group" aria-label="Reset actions"></div>
+    <label for="resetWord">My reset word or phrase</label>
+    <input type="text" id="resetWord" data-key="resetWord" placeholder="e.g., Fresh start">
+    <div class="composed empty" id="resetComposed" aria-live="polite">Pick an action above to build your routine.</div>
+    <label for="refocus">Primary Process Goal I Refocus On</label>
+    <input type="text" id="refocus" data-key="refocus" placeholder="e.g., Listen fully before speaking next">
+    <div class="btn-row"><button type="button" class="btn btn-primary" id="practiceBtn">▶ Practice it (5 seconds)</button></div>
+    <div class="practice" id="practice" aria-live="assertive">
+      <div class="ring" id="ring">5</div>
+      <div class="practice-step" id="practiceStep"></div>
+    </div>
+
+    <h3>The 3-Word Focus Cue</h3>
+    <p class="muted">To stop overthinking, give your mind clear, concrete cues instead of anxious noise. Tap a slot, then tap a word—or type your own.</p>
+    <div class="slots">
+      <div class="slot" data-slot="0"><div class="slot-label">Word 1</div><input type="text" id="w0" data-key="w0" aria-label="Cue word 1" placeholder="Pause" maxlength="20"></div>
+      <div class="slot" data-slot="1"><div class="slot-label">Word 2</div><input type="text" id="w1" data-key="w1" aria-label="Cue word 2" placeholder="Focus" maxlength="20"></div>
+      <div class="slot" data-slot="2"><div class="slot-label">Word 3</div><input type="text" id="w2" data-key="w2" aria-label="Cue word 3" placeholder="Act" maxlength="20"></div>
+    </div>
+    <div class="chips" id="cueChips" role="group" aria-label="Suggested cue words"></div>
+    <div class="cue-preview empty" id="cuePreview" aria-live="polite">Your cue will appear here</div>
+    <label for="cueWhere">Where will you keep it?</label>
+    <input type="text" id="cueWhere" data-key="cueWhere" placeholder="e.g., On a sticky note on my laptop">
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card" aria-labelledby="s2h">
+    <span class="chip-step">Step 2 · Others</span>
+    <h2 id="s2h">Help Someone Spark Their Own Why</h2>
+    <div class="apply others"><strong>How to Apply It to Others</strong>When someone hits a slump, giving them a canned pep talk or telling them what they "should" do usually goes in one ear and out the other. Instead, ask thoughtful questions that spark their memory: a tough moment they handled well before (Aptitude), what they care about right now (Motive), and what drew them to this path in the first place (Enjoyment).</div>
+    <div class="scenario">Your friend Dana went back to school at night to finish her degree while working full-time. Three months in, she calls you and says, "I'm exhausted. I'm behind on two assignments. Maybe I'm just not cut out for this. I think I'm going to drop out."</div>
+    <p class="muted" style="margin-top:12px">Write three real questions you could ask Dana (or someone in your own life):</p>
+    <label for="oa">Aptitude question <span class="hint">— remind them of a tough moment they handled well</span></label>
+    <textarea id="oa" data-key="oa" placeholder="e.g., Remember when you trained the whole new team at work while covering two shifts? How did you get through that?"></textarea>
+    <label for="om">Motive question <span class="hint">— what do they care most about right now?</span></label>
+    <textarea id="om" data-key="om" placeholder="e.g., When you picture finishing this degree, who are you doing it for?"></textarea>
+    <label for="oe">Enjoyment question <span class="hint">— what made them excited about this path?</span></label>
+    <textarea id="oe" data-key="oe" placeholder="e.g., What was the class or moment that made you think, 'Yes, this is what I want'?"></textarea>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card" aria-labelledby="s3h">
+    <span class="chip-step">Step 3 · Knowledge Check</span>
+    <h2 id="s3h">Quick Knowledge Check</h2>
+    <p class="muted">Pick the best answer for each everyday scenario.</p>
+    <div id="quiz"></div>
+    <div class="score" id="score" aria-live="polite"></div>
+    <div class="btn-row"><button type="button" class="btn btn-secondary" id="retryQuiz">Retry quiz</button></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card" aria-labelledby="s4h">
+    <span class="chip-step">Step 4 · Your Summary</span>
+    <h2 id="s4h">Your Inner Why Plan</h2>
+    <div class="challenge">
+      <strong>🎯 Try This Today — Name It, Reset It, Cue It</strong>
+      <ol>
+        <li><b>Morning:</b> Read your One-Line Inner Why out loud once before you start your day.</li>
+        <li><b>During the day:</b> The first time something goes wrong, use your Physical Reset Routine within 5 seconds—shoulders down, one breath, your reset word.</li>
+        <li><b>Before a demanding moment</b> (a meeting, a hard conversation, a class): whisper your 3-Word Focus Cue to yourself.</li>
+        <li><b>Evening:</b> Ask one person in your life a single Aptitude, Motive, or Enjoyment question—and just listen to their answer.</li>
+      </ol>
+    </div>
+    <p class="muted" style="margin-top:14px">Your summary updates as you type. Copy it into your journal or save it as a PDF.</p>
+    <pre class="summary-out" id="summaryOut" tabindex="0" aria-label="Your summary"></pre>
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" id="copyBtn">Copy Summary</button>
+      <button type="button" class="btn btn-secondary" id="printBtn">Print / Save as PDF</button>
+      <button type="button" class="btn btn-danger" id="resetAll">Start Over</button>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var KEY = 'synapse-04-inner-why';
+  var RESET_ACTIONS = ['Drop my shoulders','Take one deep breath','Press feet into the floor','Unclench my jaw','Roll my neck once','Open and close my hands'];
+  var CUE_WORDS = ['Pause','Focus','Act','Breathe','Look','Speak','Steady','Clear','Ready','Listen','Choose','Move'];
+  var QUIZ = [
+    {q:'Chris made an error during a team call and feels his face get hot. Which is the best example of a Physical Reset Routine?',
+     o:['Replaying the mistake over and over to make sure it never happens again.','Dropping his shoulders, taking one deep breath, and saying "Fresh start" to himself.','Apologizing repeatedly for the rest of the call.','Turning off his camera and checking out for the rest of the meeting.'],
+     c:1, x:'A Physical Reset Routine ties the release of frustration to one simple, subtle physical action that brings your attention back to the present.'},
+    {q:'A coworker is in a slump and says they don’t see the point of their job anymore. Which approach best helps them activate their own why?',
+     o:['"You should just be grateful you have a job."','A 10-minute speech about how hard you work.','"What was it that made you excited to take this job in the first place?"','"Everyone feels like that—just push through."'],
+     c:2, x:'Asking real questions that jog their memory (like Enjoyment) helps them uncover their own drive instead of hearing a canned lecture.'},
+    {q:'Which answer best fits the "A — Aptitude" part of the NAME tool?',
+     o:['"If I don’t change, I’ll keep feeling stuck."','"I’ve already proven I can stay calm under deadlines and listen when tensions rise."','"I’m doing this for my family."','"I love seeing ideas come together."'],
+     c:1, x:'Aptitude is about the skills and strengths you have already proved you have.'}
+  ];
+  var CHALLENGE = 'TRY THIS TODAY — Name It, Reset It, Cue It\n1. Morning: Read your One-Line Inner Why out loud once before you start your day.\n2. During the day: The first time something goes wrong, use your Physical Reset Routine within 5 seconds—shoulders down, one breath, your reset word.\n3. Before a demanding moment (a meeting, a hard conversation, a class): whisper your 3-Word Focus Cue to yourself.\n4. Evening: Ask one person in your life a single Aptitude, Motive, or Enjoyment question—and just listen to their answer.';
+
+  var state = {fields:{}, actions:[], quiz:[null,null,null]};
+  var activeSlot = 0;
+  var $ = function(id){return document.getElementById(id);};
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw){
+        var s = JSON.parse(raw);
+        if(s && typeof s === 'object'){
+          state.fields = s.fields || {};
+          state.actions = Array.isArray(s.actions) ? s.actions.filter(function(a){return RESET_ACTIONS.indexOf(a)>-1;}).slice(0,3) : [];
+          state.quiz = Array.isArray(s.quiz) && s.quiz.length===3 ? s.quiz : [null,null,null];
+        }
+      }
+    }catch(e){}
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+  function val(k){ return (state.fields[k] || '').trim(); }
+
+  function postHeight(){
+    try{ window.parent.postMessage({type:'synapse-widget-height', height: document.documentElement.scrollHeight}, '*'); }catch(e){}
+  }
+
+  /* text helpers */
+  function clean(s){ return (s||'').trim().replace(/^["'“‘]+|["'”’]+$/g,'').replace(/[.!\s]+$/,'').trim(); }
+  function lowerFirst(s){
+    if(!s) return s;
+    if(/^I\b/.test(s) || /^I'/.test(s) || /^[A-Z]{2,}/.test(s)) return s;
+    return s.charAt(0).toLowerCase() + s.slice(1);
+  }
+  function motivePhrase(m){
+    m = clean(m); if(!m) return '';
+    var low = lowerFirst(m);
+    if(/^to\s/i.test(m)) return 'I want ' + low;           // "to prove to myself..."
+    if(/^(i|i'm|i am|i want)\b/i.test(m)) return m.replace(/^i\b/,'I');
+    if(/^(for|because)\s/i.test(m)) return 'I’m doing it ' + low;
+    return 'I’m working hard for ' + low;
+  }
+  function aptPhrase(a){
+    a = clean(a); if(!a) return '';
+    a = a.replace(/^(i (have )?(already )?(proved|proven) (that )?i can|i can|i'm good at|i am good at)\s+/i,'');
+    var low = lowerFirst(a);
+    if(/ing\b/.test(low.split(' ')[0])) return 'I’ve already proven I’m capable of ' + low;
+    return 'I’ve already proven I can ' + low;
+  }
+  function enjoyPhrase(e){
+    e = clean(e); if(!e) return '';
+    e = e.replace(/^(i (really )?(love|enjoy)\s+)/i,'');
+    return 'I love ' + lowerFirst(e);
+  }
+  function necPhrase(n){
+    n = clean(n); if(!n) return '';
+    n = n.replace(/^if i don'?t change,?\s*/i,'');
+    return 'if I don’t change, ' + lowerFirst(n);
+  }
+  function buildAuto(){
+    var m = motivePhrase(val('m')), a = aptPhrase(val('a')), e = enjoyPhrase(val('e')), n = necPhrase(val('n'));
+    var parts = [];
+    if(m) parts.push('I keep showing up because ' + lowerFirst(m) + '.');
+    var rest = [a, e].filter(Boolean);
+    if(n){
+      if(rest.length){ parts.push(rest.join(', ') + ', and ' + n + '.'); }
+      else { parts.push(n.charAt(0).toUpperCase() + n.slice(1) + '.'); }
+    } else if(rest.length){
+      parts.push(rest.length===2 ? rest[0] + ', and ' + rest[1] + '.' : rest[0] + '.');
+    }
+    var out = parts.join(' ');
+    return out ? out.charAt(0).toUpperCase() + out.slice(1) : '';
+  }
+
+  function composeReset(){
+    if(!state.actions.length) return '';
+    var acts = state.actions.map(function(a,i){ return i===0 ? a : lowerFirst(a); });
+    var word = clean(val('resetWord'));
+    if(word) acts.push('say ‘' + word + '’');
+    return acts.join(' + ');
+  }
+  function cueWords(){ return [0,1,2].map(function(i){ return clean(val('w'+i)); }).filter(Boolean); }
+
+  /* render */
+  function renderTiles(){
+    ['n','a','m','e'].forEach(function(k){
+      var t = document.querySelector('[data-tile="'+k+'"]');
+      t.classList.toggle('filled', !!val(k));
+    });
+    var line = buildAuto(), el = $('autoLine');
+    if(line){ el.textContent = '“' + line + '”'; el.classList.remove('empty'); }
+    else { el.textContent = 'Fill in the N-A-M-E tiles above and your anchor will appear here.'; el.classList.add('empty'); }
+  }
+  function renderReset(){
+    var box = $('resetChips');
+    Array.prototype.forEach.call(box.children, function(btn){
+      var on = state.actions.indexOf(btn.dataset.action) > -1;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.disabled = !on && state.actions.length >= 3;
+    });
+    var c = composeReset(), el = $('resetComposed');
+    if(c){ el.textContent = c; el.classList.remove('empty'); }
+    else { el.textContent = 'Pick an action above to build your routine.'; el.classList.add('empty'); }
+  }
+  function renderCue(){
+    var w = cueWords(), el = $('cuePreview');
+    if(w.length){ el.textContent = w.join(' · '); el.classList.remove('empty'); }
+    else { el.textContent = 'Your cue will appear here'; el.classList.add('empty'); }
+    document.querySelectorAll('.slot').forEach(function(s){ s.classList.toggle('active', +s.dataset.slot === activeSlot); });
+  }
+
+  function renderQuiz(){
+    var wrap = $('quiz'); wrap.textContent = '';
+    QUIZ.forEach(function(item, qi){
+      var box = document.createElement('div'); box.className = 'q';
+      var qt = document.createElement('div'); qt.className = 'q-text'; qt.textContent = (qi+1) + '. ' + item.q; box.appendChild(qt);
+      var chosen = state.quiz[qi];
+      item.o.forEach(function(opt, oi){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'opt';
+        b.textContent = 'ABCD'[oi] + ') ' + opt;
+        if(chosen !== null){
+          b.disabled = true;
+          if(oi === item.c) b.classList.add('correct');
+          if(oi === chosen && chosen !== item.c) b.classList.add('wrong');
+        }
+        b.addEventListener('click', function(){ state.quiz[qi] = oi; save(); renderQuiz(); update(); });
+        box.appendChild(b);
+      });
+      var ex = document.createElement('div'); ex.className = 'explain'; ex.setAttribute('aria-live','polite');
+      if(chosen !== null){
+        var ok = chosen === item.c;
+        ex.classList.add(ok ? 'ok' : 'no');
+        ex.textContent = (ok ? '✔ Correct! ' : '✘ Not quite — the answer is ' + 'ABCD'[item.c] + '. ') + item.x;
+      }
+      box.appendChild(ex);
+      wrap.appendChild(box);
+    });
+    var answered = state.quiz.filter(function(x){return x!==null;}).length;
+    $('score').textContent = answered ? 'Score: ' + quizScore() + ' / 3' + (answered<3 ? ' (' + answered + ' of 3 answered)' : '') : '';
+  }
+  function quizScore(){ return state.quiz.reduce(function(s,a,i){ return s + (a === QUIZ[i].c ? 1 : 0); }, 0); }
+
+  function progress(){
+    var sections = [
+      ['n','a','m','e'].every(function(k){return !!val(k);}),
+      !!val('why'),
+      state.actions.length > 0,
+      !!val('refocus'),
+      cueWords().length === 3,
+      !!(val('oa') && val('om') && val('oe')),
+      state.quiz.every(function(x){return x!==null;})
+    ];
+    var done = sections.filter(Boolean).length;
+    var pct = Math.round(done / sections.length * 100);
+    $('progFill').style.width = pct + '%';
+    $('progText').textContent = pct + '% complete';
+    $('progCount').textContent = done + ' of ' + sections.length + ' sections';
+  }
+
+  function line(label, v){ return label + ': ' + (v || '—'); }
+  function buildSummary(){
+    var answered = state.quiz.filter(function(x){return x!==null;}).length;
+    var why = val('why') || buildAuto();
+    var out = [
+      'SYNAPSE™ Life & Performance — Pillar 4 of 7',
+      'A — ACTIVATING THE INNER "WHY"',
+      'NAME Prompts • Physical Reset Routine • 3-Word Focus Cue',
+      '',
+      '== MY N-A-M-E ==',
+      line('N — Necessity', val('n')),
+      line('A — Aptitude', val('a')),
+      line('M — Motive', val('m')),
+      line('E — Enjoyment', val('e')),
+      '',
+      line('MY ONE-LINE INNER WHY', why),
+      '',
+      '== MY PHYSICAL RESET ROUTINE ==',
+      line('Reset action', composeReset()),
+      line('Process goal I refocus on', val('refocus')),
+      '',
+      '== MY 3-WORD FOCUS CUE ==',
+      line('Cue', cueWords().join(' · ')),
+      line('Where I’ll keep it', val('cueWhere')),
+      '',
+      '== HELPING SOMEONE SPARK THEIR WHY ==',
+      line('Aptitude question', val('oa')),
+      line('Motive question', val('om')),
+      line('Enjoyment question', val('oe')),
+      '',
+      line('KNOWLEDGE CHECK', answered ? quizScore() + ' / 3' + (answered<3 ? ' (' + answered + ' of 3 answered)' : '') : 'Not yet taken'),
+      '',
+      CHALLENGE
+    ];
+    return out.join('\n');
+  }
+
+  function update(){
+    renderTiles(); renderReset(); renderCue(); progress();
+    $('summaryOut').textContent = buildSummary();
+    postHeight();
+  }
+
+  /* setup */
+  function init(){
+    load();
+    // chips
+    var rc = $('resetChips');
+    RESET_ACTIONS.forEach(function(a){
+      var b = document.createElement('button'); b.type='button'; b.className='chip'; b.dataset.action=a; b.textContent=a;
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click', function(){
+        var i = state.actions.indexOf(a);
+        if(i > -1) state.actions.splice(i,1); else if(state.actions.length < 3) state.actions.push(a);
+        save(); update();
+      });
+      rc.appendChild(b);
+    });
+    var cc = $('cueChips');
+    CUE_WORDS.forEach(function(w){
+      var b = document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=w;
+      b.addEventListener('click', function(){
+        var inp = $('w'+activeSlot); inp.value = w; state.fields['w'+activeSlot] = w;
+        // advance to next empty slot
+        var next = [0,1,2].filter(function(i){ return !val('w'+i); })[0];
+        activeSlot = next === undefined ? (activeSlot+1)%3 : next;
+        save(); update();
+      });
+      cc.appendChild(b);
+    });
+    // fields
+    document.querySelectorAll('[data-key]').forEach(function(el){
+      var k = el.dataset.key;
+      if(state.fields[k]) el.value = state.fields[k];
+      el.addEventListener('input', function(){ state.fields[k] = el.value; save(); update(); });
+    });
+    [0,1,2].forEach(function(i){
+      $('w'+i).addEventListener('focus', function(){ activeSlot = i; renderCue(); });
+    });
+    activeSlot = [0,1,2].filter(function(i){ return !val('w'+i); })[0] || 0;
+
+    $('useAuto').addEventListener('click', function(){
+      var l = buildAuto();
+      if(!l){ setStatus('Fill in at least one N-A-M-E tile first.'); return; }
+      $('why').value = l; state.fields.why = l; save(); update(); setStatus('Auto-line added — feel free to edit it.');
+    });
+    $('practiceBtn').addEventListener('click', runPractice);
+    $('retryQuiz').addEventListener('click', function(){ state.quiz=[null,null,null]; save(); renderQuiz(); update(); });
+    $('copyBtn').addEventListener('click', copySummary);
+    $('printBtn').addEventListener('click', function(){ window.print(); });
+    $('resetAll').addEventListener('click', function(){
+      if(!confirm('Clear all your answers and start over?')) return;
+      try{ localStorage.removeItem(KEY); }catch(e){}
+      state = {fields:{}, actions:[], quiz:[null,null,null]};
+      document.querySelectorAll('[data-key]').forEach(function(el){ el.value=''; });
+      activeSlot = 0; renderQuiz(); update(); setStatus('Cleared. Fresh start.');
+    });
+
+    renderQuiz(); update();
+    window.addEventListener('resize', postHeight);
+    window.addEventListener('load', postHeight);
+  }
+
+  var practiceTimer = null;
+  function runPractice(){
+    var steps = state.actions.length ? state.actions.slice() : ['Drop my shoulders','Take one deep breath'];
+    var word = clean(val('resetWord')) || 'Fresh start';
+    steps.push('Say “' + word + '”');
+    var goal = clean(val('refocus'));
+    steps.push(goal ? 'Refocus: ' + goal : 'Back to the present moment');
+    var box = $('practice'), ring = $('ring'), st = $('practiceStep');
+    box.classList.add('on'); postHeight();
+    if(practiceTimer) clearInterval(practiceTimer);
+    var total = 5, t = 0;
+    function tick(){
+      if(t >= total){
+        clearInterval(practiceTimer); practiceTimer = null;
+        ring.textContent = '✓'; st.textContent = 'Reset complete. You’re back in the present.';
+        return;
+      }
+      ring.textContent = String(total - t);
+      var idx = Math.min(steps.length-1, Math.floor(t * steps.length / total));
+      st.textContent = steps[idx];
+      t++;
+    }
+    tick(); practiceTimer = setInterval(tick, 1000);
+  }
+
+  function setStatus(msg){ var s=$('status'); s.textContent = msg; setTimeout(function(){ if(s.textContent===msg) s.textContent=''; }, 4000); }
+  function fallbackCopy(text){
+    try{
+      var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position='fixed'; ta.style.top='-1000px'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
+    }catch(e){ return false; }
+  }
+  function selectSummary(){
+    try{ var r=document.createRange(); r.selectNodeContents($('summaryOut')); var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }catch(e){}
+    setStatus('Summary selected — press Ctrl/Cmd+C to copy.');
+  }
+  function copySummary(){
+    var text = buildSummary();
+    function fb(){ if(fallbackCopy(text)) setStatus('Copied to clipboard!'); else selectSummary(); }
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(function(){ setStatus('Copied to clipboard!'); }, fb);
+      } else fb();
+    }catch(e){ fb(); }
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>

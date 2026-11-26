@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE™ — S: Strategic Roadmapping (Process Goal Roadmap)</title>
+<style>
+  :root{
+    --bg:#0F172A; --panel:#1E293B; --panel-2:#162033; --border:#334155;
+    --text:#E2E8F0; --muted:#94A3B8; --cyan:#22D3EE; --emerald:#10B981;
+    --amber:#F59E0B; --rose:#F43F5E; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:28px}
+  @media (max-width:640px){.wrap{padding:16px}}
+
+  /* Header */
+  header.hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+  .badge{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#10B981);color:#0F172A;font-weight:800;font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(34,211,238,.25)}
+  .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  h1{font-size:28px;line-height:1.2;margin:0 0 4px}
+  .subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+  .summary-text{color:var(--muted);margin:0}
+  @media (max-width:640px){header.hero{flex-direction:column}h1{font-size:24px}}
+
+  /* Progress */
+  .progress-wrap{position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0 12px;margin-bottom:8px}
+  .progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+  .progress{height:6px;border-radius:99px;background:var(--panel);overflow:hidden}
+  .progress > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+
+  /* Cards */
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin:0 0 20px}
+  @media (max-width:640px){.card{padding:16px}}
+  .chip-step{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(34,211,238,.4);background:rgba(34,211,238,.08);border-radius:99px;padding:4px 12px;margin-bottom:10px}
+  h2{font-size:22px;margin:0 0 10px}
+  h3{font-size:18px;margin:22px 0 8px;color:var(--text)}
+  p{margin:0 0 12px}
+  .muted{color:var(--muted)}
+  .apply{background:var(--panel-2);border-left:3px solid var(--cyan);border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:15px}
+  .apply strong{color:var(--cyan)}
+  .apply.others{border-left-color:var(--emerald)}
+  .apply.others strong{color:var(--emerald)}
+  .sub{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:16px}
+
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  .hint{font-weight:400;color:var(--muted);font-size:14px}
+  input[type=text],textarea{width:100%;background:#0B1222;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font:inherit;min-height:44px}
+  textarea{min-height:84px;resize:vertical}
+  input::placeholder,textarea::placeholder{color:#64748B}
+  input:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.2)}
+  :focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,opacity .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A}
+  .btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+  .btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+
+  /* Sorter */
+  .sort-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#0B1222}
+  .sort-item .goal{flex:1}
+  .sort-item .choices{display:flex;gap:6px;flex-wrap:wrap}
+  .sort-item .choices button{min-height:44px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font:inherit;font-size:14px;cursor:pointer}
+  .sort-item.right{border-color:var(--emerald);background:rgba(16,185,129,.08)}
+  .sort-item.wrong{border-color:var(--rose);background:rgba(244,63,94,.08)}
+  .sort-item .fb{display:block;font-size:13px;margin-top:4px}
+  .sort-item.right .fb{color:var(--emerald)}
+  .sort-item.wrong .fb{color:var(--rose)}
+  @media (max-width:640px){.sort-item{flex-direction:column;align-items:stretch}}
+
+  /* Cross-out */
+  .crossout-stage{position:relative;margin-top:14px;padding:26px 18px;border:1px dashed var(--border);border-radius:12px;background:#0B1222;min-height:110px;text-align:center;overflow:hidden}
+  .goal-display{position:relative;display:inline-block;font-size:22px;font-weight:700;padding:6px 8px;transition:color .6s ease .7s,opacity .6s ease .7s;word-break:break-word}
+  .goal-display.empty{color:#64748B;font-weight:500;font-size:16px}
+  .goal-display svg{position:absolute;left:-4%;top:0;width:108%;height:100%;pointer-events:none;overflow:visible}
+  .goal-display path{fill:none;stroke:var(--rose);stroke-width:4;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .8s cubic-bezier(.6,.1,.3,1)}
+  .crossed .goal-display{color:#64748B;opacity:.7}
+  .crossed .goal-display path{stroke-dashoffset:0}
+  .stamp{position:absolute;right:16px;bottom:10px;transform:rotate(-8deg) scale(1.6);opacity:0;border:2px solid var(--rose);color:var(--rose);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:12px;padding:4px 10px;border-radius:6px;transition:opacity .3s ease 1s,transform .3s ease 1s;background:rgba(15,23,42,.85)}
+  .crossed .stamp{opacity:1;transform:rotate(-8deg) scale(1)}
+  .depends{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .tag{min-height:44px;border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:99px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+  .tag[aria-pressed=true]{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.1)}
+  .crossed .tag[aria-pressed=true]{animation:float 3s ease-in-out infinite}
+  .tag:nth-child(2n){animation-delay:.6s !important}
+  .tag:nth-child(3n){animation-delay:1.2s !important}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* Process goals */
+  .pg{border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:14px;background:#0B1222;transition:border-color .3s,background .3s}
+  .pg label:first-child{margin-top:0}
+  .pg.ok{border-color:var(--emerald);background:rgba(16,185,129,.09)}
+  .check{display:flex;align-items:center;gap:10px;font-weight:600;margin-top:10px;min-height:44px;cursor:pointer}
+  .check input{width:22px;height:22px;accent-color:var(--emerald)}
+  .pg .ok-badge{display:none;color:var(--emerald);font-size:13px;font-weight:700}
+  .pg.ok .ok-badge{display:inline}
+
+  /* Ripple */
+  .ripple-grid{display:grid;grid-template-columns:1fr 200px;gap:18px;align-items:center}
+  @media (max-width:640px){.ripple-grid{grid-template-columns:1fr}}
+  .ripple{position:relative;width:180px;height:180px;margin:0 auto}
+  .ripple .drop{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--muted);transition:background .3s}
+  .ripple .ring{position:absolute;left:50%;top:50%;width:160px;height:160px;margin:-80px 0 0 -80px;border-radius:50%;border:2px solid var(--muted);opacity:.15;transform:scale(.3)}
+  .ripple.pos .drop{background:var(--emerald)}
+  .ripple.neg .drop{background:var(--rose)}
+  .ripple.pos .ring{border-color:var(--emerald);animation:ring 3s ease-out infinite}
+  .ripple.neg .ring{border-color:var(--rose);animation:ring 3s ease-out infinite}
+  .ripple .ring:nth-child(2){animation-delay:1s}
+  .ripple .ring:nth-child(3){animation-delay:2s}
+  @keyframes ring{0%{transform:scale(.15);opacity:.9}100%{transform:scale(1);opacity:0}}
+  .ripple-caption{text-align:center;font-size:13px;color:var(--muted);margin-top:6px}
+  .ripple.pos + .ripple-caption{color:var(--emerald)}
+  .ripple.neg + .ripple-caption{color:var(--rose)}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .quick button{min-height:44px;border:1px dashed var(--emerald);background:transparent;color:var(--emerald);border-radius:99px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer;text-align:left}
+
+  /* Stars */
+  .session{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+  .session:last-of-type{border-bottom:0}
+  .session .sname{font-weight:700;color:var(--cyan)}
+  .session input{min-height:44px}
+  @media (max-width:640px){.session{grid-template-columns:1fr}}
+  .stars{display:flex;gap:2px}
+  .star{width:44px;height:44px;border:0;background:transparent;cursor:pointer;padding:6px;border-radius:8px}
+  .star svg{width:100%;height:100%;fill:transparent;stroke:var(--muted);stroke-width:1.5;transition:fill .15s,stroke .15s}
+  .star.on svg{fill:var(--amber);stroke:var(--amber)}
+  .avg{margin-top:12px;padding:12px 14px;border-radius:10px;background:#0B1222;border:1px solid var(--border)}
+  .avg strong{color:var(--amber)}
+
+  /* Scenario */
+  .scenario{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-style:italic;color:#CBD5E1}
+
+  /* Quiz */
+  .q{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+  .q:first-of-type{border-top:0;padding-top:0}
+  .q-title{font-weight:700;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;min-height:44px;margin:0 0 8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#0B1222;color:var(--text);font:inherit;cursor:pointer}
+  .opt:hover:not([disabled]){border-color:var(--cyan)}
+  .opt[disabled]{cursor:default}
+  .opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.12)}
+  .opt.incorrect{border-color:var(--rose);background:rgba(244,63,94,.12)}
+  .explain{font-size:15px;margin-top:4px;min-height:1px}
+  .explain.good{color:var(--emerald)}
+  .explain.bad{color:var(--rose)}
+  .explain span{color:var(--text)}
+  .score{margin-top:16px;font-weight:700;font-size:18px}
+  .score strong{color:var(--emerald)}
+
+  /* Summary */
+  pre.summary{white-space:pre-wrap;word-break:break-word;background:#0B1222;border:1px solid var(--border);border-radius:12px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;max-height:460px;overflow:auto;margin:0}
+  .toast{min-height:22px;margin-top:10px;color:var(--emerald);font-weight:600}
+  .challenge{border:1px solid rgba(16,185,129,.4);background:rgba(16,185,129,.06);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+  .challenge h3{margin-top:0;color:var(--emerald)}
+  .challenge ol{margin:0;padding-left:20px}
+  .challenge li{margin-bottom:6px}
+
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 0 24px}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none !important;transition:none !important}
+  }
+
+  @media print{
+    body{background:#fff;color:#000;font-size:12pt}
+    .wrap{max-width:none;padding:0}
+    .progress-wrap,.btn,.btn-row,.quick,.stars,.choices,.toast,.ripple,.ripple-caption,.depends .tag[aria-pressed=false],.no-print{display:none !important}
+    .card{background:#fff;border:1px solid #999;color:#000;break-inside:avoid;page-break-inside:avoid}
+    .apply,.sub,.scenario,.pg,.sort-item,.avg,.crossout-stage,.challenge,pre.summary,input,textarea,.opt{background:#fff !important;color:#000 !important;border-color:#999 !important}
+    .badge{box-shadow:none;border:2px solid #000;background:#fff;color:#000}
+    .subtitle,.chip-step,.apply strong,.session .sname{color:#000 !important}
+    .muted,.summary-text,.eyebrow,footer{color:#333 !important}
+    pre.summary{max-height:none;overflow:visible}
+    .goal-display path{stroke-dashoffset:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="badge" aria-hidden="true">S</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 6 of 7</p>
+      <h1>S — Strategic Roadmapping</h1>
+      <p class="subtitle">Everyday Goal Setting • The Process Goal Roadmap</p>
+      <p class="summary-text">Obsessing over results like a promotion, a top grade, or praise from everyone creates constant stress, because those outcomes depend on timing, other people's choices, and luck. Strategic Roadmapping means literally crossing out outcome goals, putting 100% of your attention on daily process goals you completely control, and sending positive ripples to the people around you.</p>
+    </div>
+  </header>
+
+  <div class="progress-wrap no-print" aria-hidden="false">
+    <div class="progress-label"><span>Your progress</span><span id="progressText">0% complete</span></div>
+    <div class="progress" role="progressbar" aria-label="Activity progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><span id="progressFill"></span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="card" aria-labelledby="s1h">
+    <span class="chip-step">Step 1 · Yourself</span>
+    <h2 id="s1h">The Process Goal Roadmap</h2>
+    <div class="apply">
+      <strong>How to Apply It to Yourself:</strong> Every choice you make sends ripples through your day. Strategic Roadmapping means replacing old knee-jerk habits with intentional positive ripples—and focusing strictly on controllable <b>Process Goals</b> rather than stressful <b>Outcome Goals</b>.<br>
+      • <b>Outcome Goals</b> (getting a big promotion, winning praise from everyone) sit outside your direct control and fuel anxiety.<br>
+      • <b>Process Goals</b> (preparing thoroughly beforehand, staying calm and attentive, speaking clearly) are 100% within your control.
+    </div>
+
+    <!-- 1A Sorter -->
+    <div class="sub">
+      <h3 style="margin-top:0">1A · Warm-Up: Outcome or Process?</h3>
+      <p class="muted">Sort each goal. Is it an <b>Outcome Goal</b> (depends on others, timing, or luck) or a <b>Process Goal</b> (100% in your control)?</p>
+      <div id="sorter"></div>
+      <p id="sorterScore" class="muted" aria-live="polite"></p>
+    </div>
+
+    <!-- 1B Cross-out -->
+    <div class="sub">
+      <h3 style="margin-top:0">1B · Cross Out Your Outcome Goal</h3>
+      <label for="outcome">Biggest Outcome Goal (Crossed Out — Outside Your Direct Control)</label>
+      <input type="text" id="outcome" data-key="outcome" placeholder="e.g., 'Win every top spot or praise this year'">
+      <div class="crossout-stage" id="stage">
+        <span class="goal-display empty" id="goalDisplay"><span id="goalText">Your outcome goal will appear here</span><svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M1 24 C 12 18, 22 27, 34 21 S 55 16, 66 22 S 88 25, 99 18"/></svg></span>
+        <span class="stamp" aria-hidden="true">Outside my control</span>
+      </div>
+      <p class="sr-only" aria-live="polite" id="crossLive"></p>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="crossBtn" type="button">✕ Cross It Out</button>
+        <button class="btn btn-secondary" id="uncrossBtn" type="button">Undo</button>
+      </div>
+      <p style="margin-top:14px;font-weight:600">What does it depend on? <span class="hint">(tap everything that's outside your control)</span></p>
+      <div class="depends" id="depends"></div>
+    </div>
+
+    <!-- 1C Process goals -->
+    <div class="sub">
+      <h3 style="margin-top:0">1C · Lock In Two Process Goals</h3>
+      <p class="muted">Write two goals that are 100% in your control. Then confirm each one honestly.</p>
+      <div class="pg" id="pg1card">
+        <label for="pg1">Process Goal #1 (100% In Your Control) <span class="ok-badge">✓ Locked in</span></label>
+        <textarea id="pg1" data-key="pg1" placeholder="e.g., 'I will pause and check the whole situation before I respond'"></textarea>
+        <label class="check"><input type="checkbox" id="pg1ok" data-key="pg1ok"> Is this 100% in my control?</label>
+      </div>
+      <div class="pg" id="pg2card">
+        <label for="pg2">Process Goal #2 (100% In Your Control) <span class="ok-badge">✓ Locked in</span></label>
+        <textarea id="pg2" data-key="pg2" placeholder="e.g., 'I will keep an open posture and listen without interrupting'"></textarea>
+        <label class="check"><input type="checkbox" id="pg2ok" data-key="pg2ok"> Is this 100% in my control?</label>
+      </div>
+    </div>
+
+    <!-- 1D Ripple -->
+    <div class="sub">
+      <h3 style="margin-top:0">1D · Positive Ripple Planner</h3>
+      <p class="muted">What's one knee-jerk reaction you'll replace, and what positive ripple will you send instead?</p>
+      <div class="ripple-grid">
+        <div>
+          <label for="oldReact">Old knee-jerk reaction</label>
+          <input type="text" id="oldReact" data-key="oldReact" placeholder="e.g., Sighing loudly when plans change">
+          <label for="newRipple">New positive ripple</label>
+          <textarea id="newRipple" data-key="newRipple" placeholder="e.g., Saying 'Okay, I'm on this—here's our next step.'"></textarea>
+          <div class="quick" id="quick">
+            <button type="button">I've got you—let's take this step by step</button>
+            <button type="button">I'm on this—here's our next step</button>
+            <button type="button">Let's pause, look at the whole picture, and pick our next move</button>
+          </div>
+        </div>
+        <div>
+          <div class="ripple" id="ripple" aria-hidden="true"><span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="drop"></span></div>
+          <p class="ripple-caption" id="rippleCaption" aria-live="polite">Fill in your reaction to see your ripple</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1E Stars -->
+    <div class="sub">
+      <h3 style="margin-top:0">1E · Session Follow-Through Ratings</h3>
+      <p class="muted">Rate how steadily you followed through on your process goals across three sessions this week (S1, S2, S3). No judgment—just information.</p>
+      <div id="sessions"></div>
+      <div class="avg" id="avg" aria-live="polite">Average follow-through: <strong>—</strong></div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card" aria-labelledby="s2h">
+    <span class="chip-step">Step 2 · Others</span>
+    <h2 id="s2h">Sending Positive Ripples</h2>
+    <div class="apply others">
+      <strong>How to Apply It to Others:</strong> People around you feel the ripples of your choices immediately. When you drop your head or complain after an error, that negative ripple spreads tension across the whole room. When you step up promptly to help fix an issue or speak clearly and early (<i>"I'm on this—here's our next step"</i>), that positive ripple gives everyone confidence and calm direction.
+    </div>
+    <p class="scenario">You're part of a church group (or community committee) running a fundraiser dinner. Thirty minutes before doors open, the caterer calls to say they'll be an hour late. The room goes quiet. One volunteer groans, "Great, this whole night is ruined," and you can feel the tension spreading.</p>
+    <label for="o1">1. The negative ripple that could spread in this moment</label>
+    <textarea id="o1" data-key="o1" placeholder="e.g., Everyone panicking, blaming the caterer, and guests walking into a stressed-out room."></textarea>
+    <label for="o2">2. The exact words you'd say to send a positive ripple instead</label>
+    <textarea id="o2" data-key="o2" placeholder="e.g., I've got you—let's take this step by step. We can't control the caterer, but we can control how we welcome people."></textarea>
+    <label for="o3">3. One process goal you could suggest the group focus on (100% in your control)</label>
+    <textarea id="o3" data-key="o3" placeholder="e.g., Greet every guest warmly at the door and bring out the drinks and appetizers we already have."></textarea>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card" aria-labelledby="s3h">
+    <span class="chip-step">Step 3 · Knowledge Check</span>
+    <h2 id="s3h">Quick Knowledge Check</h2>
+    <p class="muted">Choose one answer for each question. You'll see the explanation right away.</p>
+    <div id="quiz"></div>
+    <div class="score" id="score" aria-live="polite"></div>
+    <div class="btn-row"><button class="btn btn-secondary" id="retryQuiz" type="button">↺ Retry quiz</button></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card" aria-labelledby="s4h">
+    <span class="chip-step">Step 4 · Your Summary</span>
+    <h2 id="s4h">Your Roadmap Summary</h2>
+    <div class="challenge">
+      <h3>🎯 Try This Today: Cross It Out &amp; Ripple It Forward</h3>
+      <ol>
+        <li><b>Cross it out:</b> Write your biggest outcome goal on a piece of paper and physically draw a line through it.</li>
+        <li><b>Pick one process goal</b> for today that is 100% in your control (e.g., "I'll listen without interrupting in every conversation today").</li>
+        <li><b>Rate it tonight:</b> Give yourself 1–5 stars for how steadily you followed through. No judgment—just information.</li>
+        <li><b>Send one positive ripple:</b> When something goes wrong today—yours or someone else's—be the first person to say, "I've got you—let's take this step by step."</li>
+      </ol>
+    </div>
+    <pre class="summary" id="summary" tabindex="0" aria-label="Your summary text"></pre>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="copyBtn" type="button">⧉ Copy Summary</button>
+      <button class="btn btn-secondary" id="printBtn" type="button">🖨 Print / Save as PDF</button>
+      <button class="btn btn-secondary" id="resetBtn" type="button">Start Over</button>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var STORE_KEY = 'synapse-06-roadmapping';
+
+  var SORT_ITEMS = [
+    {t:'Getting promoted by June', a:'outcome', why:'A promotion depends on budgets, timing, and someone else\'s decision.'},
+    {t:'Reviewing my notes for 20 minutes every evening', a:'process', why:'You decide whether you sit down and review—fully in your control.'},
+    {t:'Getting praise from everyone at the meeting', a:'outcome', why:'Other people\'s reactions are outside your direct control.'},
+    {t:'Listening without interrupting in every conversation today', a:'process', why:'How you listen is 100% up to you.'},
+    {t:'Being picked for the leadership role', a:'outcome', why:'Being chosen depends on other people\'s choices and timing.'},
+    {t:'Preparing calmly the night before a big day', a:'process', why:'Your preparation is completely within your control.'}
+  ];
+  var DEPENDS = ['Timing','Other people\'s choices','Luck','Budgets','Someone else\'s opinion','Who else is involved','Things changing at the last minute'];
+
+  var QUIZ = [
+    {q:'Which of the following is a Process Goal?',
+     o:['Getting the highest score on the exam.','Being chosen for the leadership role.','Reviewing my notes for 20 minutes every evening this week.','Getting everyone at work to like my presentation.'],
+     c:2, e:'A process goal is an action that is 100% within your control, unlike outcomes that depend on other people and timing.'},
+    {q:'Why does SYNAPSE ask you to literally cross out outcome goals?',
+     o:['Because outcomes don\'t matter at all.','Because outcome goals depend on timing, other people\'s choices, and luck—so focusing on them fuels anxiety.','Because you should never think about the future.','Because process goals are easier and require less effort.'],
+     c:1, e:'Crossing out outcome goals moves your attention away from what you can\'t control and onto daily actions you can.'},
+    {q:'After a mistake in a group project, which response sends a positive ripple?',
+     o:['Sighing loudly and saying, "This always happens."','Going quiet and letting someone else deal with it.','"I\'m on this—here\'s our next step."','Pointing out whose fault it was.'],
+     c:2, e:'Stepping up calmly and speaking clearly and early gives everyone around you confidence and direction.'}
+  ];
+  var LETTERS = ['A','B','C','D'];
+
+  var CHALLENGE = [
+    'TRY THIS TODAY — Cross It Out & Ripple It Forward',
+    '1. Cross it out: Write your biggest outcome goal on a piece of paper and physically draw a line through it.',
+    '2. Pick one process goal for today that is 100% in your control (e.g., "I\'ll listen without interrupting in every conversation today").',
+    '3. Rate it tonight: Give yourself 1–5 stars for how steadily you followed through. No judgment—just information.',
+    '4. Send one positive ripple: When something goes wrong today—yours or someone else\'s—be the first person to say, "I\'ve got you—let\'s take this step by step."'
+  ].join('\n');
+
+  function blank(){
+    return {outcome:'',crossed:false,depends:[],pg1:'',pg1ok:false,pg2:'',pg2ok:false,oldReact:'',newRipple:'',
+      sessions:[{label:'',stars:0},{label:'',stars:0},{label:'',stars:0}],o1:'',o2:'',o3:'',sorter:{},quiz:{}};
+  }
+  var state = blank();
+
+  function load(){
+    try{
+      var raw = window.localStorage.getItem(STORE_KEY);
+      if(raw){
+        var s = JSON.parse(raw), b = blank();
+        for(var k in b){ if(Object.prototype.hasOwnProperty.call(s,k)) b[k]=s[k]; }
+        if(!Array.isArray(b.sessions) || b.sessions.length!==3) b.sessions = blank().sessions;
+        if(!Array.isArray(b.depends)) b.depends = [];
+        state = b;
+      }
+    }catch(e){}
+  }
+  function save(){ try{ window.localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, text){ var n=document.createElement(tag); if(cls) n.className=cls; if(text!=null) n.textContent=text; return n; }
+
+  function postHeight(){
+    try{ window.parent.postMessage({type:'synapse-widget-height', height: document.documentElement.scrollHeight}, '*'); }catch(e){}
+  }
+
+  /* ---------- Bind text inputs ---------- */
+  function bindInputs(){
+    var fields = document.querySelectorAll('[data-key]');
+    Array.prototype.forEach.call(fields, function(f){
+      var key = f.getAttribute('data-key');
+      if(f.type==='checkbox'){ f.checked = !!state[key]; }
+      else { f.value = state[key] || ''; }
+      var evt = f.type==='checkbox' ? 'change' : 'input';
+      f.addEventListener(evt, function(){
+        state[key] = f.type==='checkbox' ? f.checked : f.value;
+        if(key==='outcome' && !f.value.trim() && state.crossed){ state.crossed=false; }
+        update();
+      });
+    });
+  }
+
+  /* ---------- Sorter ---------- */
+  function renderSorter(){
+    var host = $('sorter'); host.textContent='';
+    SORT_ITEMS.forEach(function(item, i){
+      var row = el('div','sort-item');
+      var left = el('div','goal');
+      left.appendChild(el('span',null,item.t));
+      var fb = el('span','fb'); left.appendChild(fb);
+      var choices = el('div','choices'); choices.setAttribute('role','group'); choices.setAttribute('aria-label','Sort: '+item.t);
+      ['outcome','process'].forEach(function(kind){
+        var b = el('button',null, kind==='outcome' ? 'Outcome' : 'Process');
+        b.type='button';
+        b.setAttribute('aria-pressed', state.sorter[i]===kind ? 'true':'false');
+        b.addEventListener('click', function(){ state.sorter[i]=kind; renderSorter(); update(); });
+        choices.appendChild(b);
+      });
+      var pick = state.sorter[i];
+      if(pick){
+        var right = pick===item.a;
+        row.classList.add(right?'right':'wrong');
+        fb.textContent = (right ? '✓ Yes — ' : '✕ Not quite. It\'s a'+(item.a==='outcome'?'n Outcome':' Process')+' Goal. ') + item.why;
+      }
+      row.appendChild(left); row.appendChild(choices);
+      host.appendChild(row);
+    });
+    var done = Object.keys(state.sorter).length, correct=0;
+    SORT_ITEMS.forEach(function(it,i){ if(state.sorter[i]===it.a) correct++; });
+    $('sorterScore').textContent = done ? ('Sorted '+done+' of '+SORT_ITEMS.length+' • '+correct+' correct') : '';
+  }
+
+  /* ---------- Depends tags ---------- */
+  function renderDepends(){
+    var host = $('depends'); host.textContent='';
+    DEPENDS.forEach(function(d){
+      var b = el('button','tag',d); b.type='button';
+      var on = state.depends.indexOf(d)>-1;
+      b.setAttribute('aria-pressed', on?'true':'false');
+      b.addEventListener('click', function(){
+        var idx = state.depends.indexOf(d);
+        if(idx>-1) state.depends.splice(idx,1); else state.depends.push(d);
+        renderDepends(); update();
+      });
+      host.appendChild(b);
+    });
+  }
+
+  /* ---------- Cross-out ---------- */
+  function renderCross(){
+    var txt = state.outcome.trim();
+    var disp = $('goalDisplay');
+    $('goalText').textContent = txt || 'Your outcome goal will appear here';
+    disp.classList.toggle('empty', !txt);
+    $('stage').classList.toggle('crossed', !!(state.crossed && txt));
+    $('crossBtn').disabled = !txt || state.crossed;
+    $('uncrossBtn').disabled = !state.crossed;
+  }
+  function wireCross(){
+    $('crossBtn').addEventListener('click', function(){
+      if(!state.outcome.trim()){ $('outcome').focus(); return; }
+      // restart animation
+      var stage = $('stage'); stage.classList.remove('crossed'); void stage.offsetWidth;
+      state.crossed = true; update();
+      $('crossLive').textContent = 'Outcome goal crossed out. It is outside your direct control.';
+    });
+    $('uncrossBtn').addEventListener('click', function(){ state.crossed=false; update(); $('crossLive').textContent='Cross-out undone.'; });
+  }
+
+  /* ---------- Process goal cards ---------- */
+  function renderPG(){
+    $('pg1card').classList.toggle('ok', !!(state.pg1ok && state.pg1.trim()));
+    $('pg2card').classList.toggle('ok', !!(state.pg2ok && state.pg2.trim()));
+  }
+
+  /* ---------- Ripple ---------- */
+  function renderRipple(){
+    var r = $('ripple'), cap = $('rippleCaption');
+    var hasOld = !!state.oldReact.trim(), hasNew = !!state.newRipple.trim();
+    r.classList.remove('pos','neg');
+    if(hasNew){ r.classList.add('pos'); cap.textContent = 'Positive ripple: calm and confidence spreading outward'; }
+    else if(hasOld){ r.classList.add('neg'); cap.textContent = 'Negative ripple: tension spreading across the room'; }
+    else { cap.textContent = 'Fill in your reaction to see your ripple'; }
+  }
+  function wireQuick(){
+    Array.prototype.forEach.call($('quick').querySelectorAll('button'), function(b){
+      b.addEventListener('click', function(){
+        var t = '"' + b.textContent + '"';
+        var ta = $('newRipple');
+        ta.value = ta.value.trim() ? (ta.value.trim() + ' ' + t) : t;
+        state.newRipple = ta.value; update();
+      });
+    });
+  }
+
+  /* ---------- Stars ---------- */
+  var STAR_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/></svg>';
+  function renderSessions(){
+    var host = $('sessions'); host.textContent='';
+    state.sessions.forEach(function(s, i){
+      var row = el('div','session');
+      var name = el('div','sname','S'+(i+1)+' · Session '+(i+1));
+      var inp = el('input'); inp.type='text'; inp.value = s.label||'';
+      inp.placeholder = ['e.g., Monday meeting','e.g., Wednesday project call','e.g., Friday check-in'][i];
+      inp.setAttribute('aria-label','Session '+(i+1)+' label (optional)');
+      inp.addEventListener('input', function(){ state.sessions[i].label = inp.value; update(false); });
+      var stars = el('div','stars'); stars.setAttribute('role','radiogroup'); stars.setAttribute('aria-label','Session '+(i+1)+' follow-through rating');
+      for(var n=1;n<=5;n++){
+        (function(n){
+          var b = el('button','star'+(s.stars>=n?' on':'')); b.type='button';
+          b.setAttribute('role','radio');
+          b.setAttribute('aria-checked', s.stars===n ? 'true':'false');
+          b.setAttribute('aria-label', n+' star'+(n>1?'s':''));
+          b.tabIndex = (s.stars===n || (s.stars===0 && n===1)) ? 0 : -1;
+          b.innerHTML = STAR_SVG; // static markup only
+          b.addEventListener('click', function(){ setStars(i, state.sessions[i].stars===n ? 0 : n, n); });
+          b.addEventListener('keydown', function(ev){
+            var cur = state.sessions[i].stars || 0, next=null;
+            if(ev.key==='ArrowRight'||ev.key==='ArrowUp') next=Math.min(5,(cur||0)+1);
+            else if(ev.key==='ArrowLeft'||ev.key==='ArrowDown') next=Math.max(1,(cur||1)-1);
+            else if(ev.key==='Home') next=1; else if(ev.key==='End') next=5;
+            if(next!==null){ ev.preventDefault(); setStars(i,next,next); }
+          });
+          stars.appendChild(b);
+        })(n);
+      }
+      row.appendChild(name); row.appendChild(inp); row.appendChild(stars);
+      host.appendChild(row);
+    });
+    var rated = state.sessions.filter(function(s){return s.stars>0;});
+    var avgBox = $('avg'); avgBox.textContent='Average follow-through: ';
+    var strong = el('strong');
+    if(rated.length){
+      var avg = rated.reduce(function(a,s){return a+s.stars;},0)/rated.length;
+      strong.textContent = avg.toFixed(1)+' / 5 ('+rated.length+' of 3 sessions rated)';
+    } else strong.textContent = '—';
+    avgBox.appendChild(strong);
+  }
+  function setStars(i, val, focusN){
+    state.sessions[i].stars = val;
+    renderSessions(); update(false);
+    var grp = $('sessions').querySelectorAll('.stars')[i];
+    if(grp){ var btn = grp.querySelectorAll('.star')[(focusN||1)-1]; if(btn) btn.focus(); }
+  }
+
+  /* ---------- Quiz ---------- */
+  function renderQuiz(){
+    var host = $('quiz'); host.textContent='';
+    QUIZ.forEach(function(item, qi){
+      var wrap = el('div','q');
+      wrap.appendChild(el('div','q-title',(qi+1)+'. '+item.q));
+      var answered = state.quiz[qi];
+      var group = el('div'); group.setAttribute('role','group'); group.setAttribute('aria-label','Question '+(qi+1)+' options');
+      item.o.forEach(function(opt, oi){
+        var b = el('button','opt', LETTERS[oi]+') '+opt); b.type='button';
+        if(answered!=null){
+          b.disabled = true;
+          if(oi===item.c) b.classList.add('correct');
+          if(oi===answered && answered!==item.c) b.classList.add('incorrect');
+        }
+        b.addEventListener('click', function(){ if(state.quiz[qi]!=null) return; state.quiz[qi]=oi; renderQuiz(); update(); });
+        group.appendChild(b);
+      });
+      wrap.appendChild(group);
+      var ex = el('div','explain'); ex.setAttribute('aria-live','polite');
+      if(answered!=null){
+        var ok = answered===item.c;
+        ex.classList.add(ok?'good':'bad');
+        ex.appendChild(document.createTextNode(ok ? '✓ Correct! ' : '✕ Not quite — the answer is '+LETTERS[item.c]+'. '));
+        ex.appendChild(el('span',null,item.e));
+      }
+      wrap.appendChild(ex);
+      host.appendChild(wrap);
+    });
+    var n = Object.keys(state.quiz).length;
+    var sc = $('score'); sc.textContent='';
+    if(n){
+      sc.appendChild(document.createTextNode('Score: '));
+      sc.appendChild(el('strong',null,quizScore()+' / 3'));
+      if(n<3) sc.appendChild(document.createTextNode('  ('+n+' of 3 answered)'));
+    }
+  }
+  function quizScore(){ var s=0; QUIZ.forEach(function(q,i){ if(state.quiz[i]===q.c) s++; }); return s; }
+
+  /* ---------- Progress ---------- */
+  function sectionsDone(){
+    var d = [
+      Object.keys(state.sorter).length===SORT_ITEMS.length,
+      !!(state.crossed && state.outcome.trim()),
+      !!(state.pg1.trim() && state.pg1ok && state.pg2.trim() && state.pg2ok),
+      !!(state.oldReact.trim() && state.newRipple.trim()),
+      state.sessions.some(function(s){return s.stars>0;}),
+      !!(state.o1.trim() || state.o2.trim() || state.o3.trim()),
+      Object.keys(state.quiz).length===3
+    ];
+    return {done:d.filter(Boolean).length, total:d.length};
+  }
+  function renderProgress(){
+    var p = sectionsDone(), pct = Math.round(p.done/p.total*100);
+    $('progressFill').style.width = pct+'%';
+    $('progressText').textContent = pct+'% complete';
+    $('progressBar').setAttribute('aria-valuenow', pct);
+  }
+
+  /* ---------- Summary ---------- */
+  function v(s){ s=(s||'').trim(); return s || '(not filled in yet)'; }
+  function buildSummary(){
+    var L = [];
+    L.push('SYNAPSE™ LIFE & PERFORMANCE — PILLAR 6 OF 7');
+    L.push('S — STRATEGIC ROADMAPPING: The Process Goal Roadmap');
+    L.push('Date: '+new Date().toLocaleDateString());
+    L.push('');
+    L.push('— STEP 1 · YOURSELF —');
+    L.push('Biggest Outcome Goal (Crossed Out — Outside My Direct Control):');
+    L.push('  '+(state.outcome.trim() ? ('✕ '+state.outcome.trim()+(state.crossed?'  [CROSSED OUT]':'  [not crossed out yet]')) : '(not filled in yet)'));
+    L.push('It depends on: '+(state.depends.length ? state.depends.join(', ') : '(none selected)'));
+    L.push('');
+    L.push('Process Goal #1 (100% In My Control): '+v(state.pg1)+(state.pg1ok?'  ✓ confirmed':''));
+    L.push('Process Goal #2 (100% In My Control): '+v(state.pg2)+(state.pg2ok?'  ✓ confirmed':''));
+    L.push('');
+    L.push('Positive Ripple Plan:');
+    L.push('  Old knee-jerk reaction: '+v(state.oldReact));
+    L.push('  New positive ripple: '+v(state.newRipple));
+    L.push('');
+    L.push('Session Follow-Through Ratings:');
+    var rated=0,total=0;
+    state.sessions.forEach(function(s,i){
+      var stars = s.stars ? (new Array(s.stars+1).join('★')+new Array(6-s.stars).join('☆')) : '(not rated)';
+      if(s.stars){rated++; total+=s.stars;}
+      L.push('  S'+(i+1)+(s.label.trim()?' ('+s.label.trim()+')':'')+': '+stars);
+    });
+    L.push('  Average: '+(rated ? (total/rated).toFixed(1)+' / 5' : '—'));
+    var sorted = Object.keys(state.sorter).length;
+    if(sorted){ var c=0; SORT_ITEMS.forEach(function(it,i){ if(state.sorter[i]===it.a) c++; }); L.push(''); L.push('Outcome vs. Process warm-up: '+c+' / '+SORT_ITEMS.length+' correct'); }
+    L.push('');
+    L.push('— STEP 2 · OTHERS (Fundraiser Dinner Scenario) —');
+    L.push('Negative ripple that could spread: '+v(state.o1));
+    L.push('My positive-ripple words: '+v(state.o2));
+    L.push('Process goal for the group: '+v(state.o3));
+    L.push('');
+    L.push('— STEP 3 · KNOWLEDGE CHECK —');
+    var n = Object.keys(state.quiz).length;
+    L.push('Score: '+quizScore()+' / 3'+(n<3?' ('+n+' of 3 answered)':''));
+    L.push('');
+    L.push('— STEP 4 · '+CHALLENGE);
+    return L.join('\n');
+  }
+
+  /* ---------- Copy / Print / Reset ---------- */
+  function toast(msg){ var t=$('toast'); t.textContent=msg; clearTimeout(toast._t); toast._t=setTimeout(function(){t.textContent='';},4000); }
+  function fallbackCopy(text){
+    var ok=false;
+    try{
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
+      ta.style.position='fixed'; ta.style.top='-1000px'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      ok = document.execCommand('copy'); document.body.removeChild(ta);
+    }catch(e){ ok=false; }
+    if(ok){ toast('✓ Summary copied to your clipboard.'); return; }
+    try{
+      var pre=$('summary'), range=document.createRange(); range.selectNodeContents(pre);
+      var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); pre.focus();
+    }catch(e){}
+    toast('Summary selected — press Ctrl/Cmd+C to copy.');
+  }
+  function wireActions(){
+    $('copyBtn').addEventListener('click', function(){
+      var text = buildSummary();
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(function(){ toast('✓ Summary copied to your clipboard.'); }, function(){ fallbackCopy(text); });
+      } else fallbackCopy(text);
+    });
+    $('printBtn').addEventListener('click', function(){ try{ window.print(); }catch(e){ toast('Printing is blocked here—use Copy Summary instead.'); } });
+    $('resetBtn').addEventListener('click', function(){
+      if(!window.confirm('Start over? This clears all of your answers on this page.')) return;
+      state = blank();
+      try{ window.localStorage.removeItem(STORE_KEY); }catch(e){}
+      Array.prototype.forEach.call(document.querySelectorAll('[data-key]'), function(f){ if(f.type==='checkbox') f.checked=false; else f.value=''; });
+      renderAll(); toast('Cleared. Fresh start.');
+      window.scrollTo(0,0);
+    });
+    $('retryQuiz').addEventListener('click', function(){ state.quiz={}; renderQuiz(); update(); });
+  }
+
+  /* ---------- Update loop ---------- */
+  function update(){
+    save();
+    renderCross(); renderPG(); renderRipple(); renderProgress();
+    $('summary').textContent = buildSummary();
+    postHeight();
+  }
+  function renderAll(){ renderSorter(); renderDepends(); renderSessions(); renderQuiz(); update(); }
+
+  load();
+  bindInputs();
+  wireCross(); wireQuick(); wireActions();
+  renderAll();
+  window.addEventListener('resize', postHeight);
+  window.addEventListener('load', postHeight);
+})();
+</script>
+</body>
+</html>

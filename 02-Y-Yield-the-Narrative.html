@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE — Y: Yield the Narrative</title>
+<style>
+:root{--bg:#0F172A;--panel:#1E293B;--panel-2:#162033;--border:#334155;--text:#E2E8F0;--muted:#94A3B8;--cyan:#22D3EE;--emerald:#10B981;--amber:#F59E0B;--rose:#F43F5E;--radius:14px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;font-size:16px}
+.wrap{max-width:880px;margin:0 auto;padding:28px}
+@media (max-width:640px){.wrap{padding:16px}}
+header.hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+.badge{flex:0 0 64px;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22D3EE,#10B981);color:#0F172A;font-weight:800;font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(34,211,238,.25)}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+h1{margin:0 0 4px;font-size:28px;line-height:1.2}
+.subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+.summary-text{color:var(--muted);margin:0}
+@media (max-width:640px){header.hero{flex-direction:column}h1{font-size:24px}}
+.progress-wrap{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 12px;margin-bottom:8px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.progress{height:6px;background:var(--panel);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin:18px 0}
+@media (max-width:640px){.card{padding:16px}}
+.chip-step{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.35);padding:4px 10px;border-radius:999px;margin-bottom:10px}
+h2{margin:4px 0 10px;font-size:21px}
+h3{margin:16px 0 8px;font-size:17px}
+p{margin:0 0 10px}
+.muted{color:var(--muted)}
+.apply{background:var(--panel-2);border-left:3px solid var(--emerald);border-radius:10px;padding:12px 14px;margin:10px 0 16px;font-size:15px}
+.apply strong{color:var(--emerald);display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+.hint{font-weight:400;color:var(--muted);font-size:14px}
+textarea,input[type=text]{width:100%;background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:12px;font:inherit;min-height:44px;resize:vertical}
+textarea{min-height:88px}
+textarea::placeholder,input::placeholder{color:#64748B}
+textarea:focus,input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.2)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 18px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,opacity .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.chip{min-height:44px;padding:8px 14px;border-radius:999px;background:var(--panel-2);border:1px solid var(--border);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
+.chip:hover{border-color:var(--cyan)}
+.chip.on{background:rgba(16,185,129,.15);border-color:var(--emerald);color:#A7F3D0}
+/* chain */
+.chain{display:flex;align-items:center;justify-content:space-between;gap:0;margin:8px 0 18px;overflow-x:auto;padding:6px 2px}
+.node{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;color:var(--muted);cursor:pointer;font:inherit;padding:4px;min-width:64px;min-height:44px;border-radius:10px}
+.node .dot{width:44px;height:44px;border-radius:50%;border:2px solid var(--border);background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted);transition:all .3s ease}
+.node .nlabel{font-size:12px;font-weight:600;text-align:center;line-height:1.2}
+.node.filled .dot{border-color:var(--emerald);background:rgba(16,185,129,.18);color:#A7F3D0;box-shadow:0 0 14px rgba(16,185,129,.35)}
+.node.filled .nlabel{color:var(--text)}
+.node.active .dot{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.18)}
+.node.active .nlabel{color:var(--cyan)}
+.node.replace.filled .dot{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A;border-color:transparent}
+.link{flex:1 1 20px;height:2px;background:var(--border);min-width:14px;margin-bottom:22px;transition:background .3s ease}
+.link.lit{background:linear-gradient(90deg,var(--emerald),var(--cyan))}
+@media (max-width:640px){.node{min-width:52px}.node .nlabel{font-size:11px}.node .dot{width:40px;height:40px}}
+.step-panel{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.step-count{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.example{font-size:14px;color:var(--muted);margin-top:6px;font-style:italic}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media (max-width:640px){.compare{grid-template-columns:1fr}}
+.col{border-radius:12px;padding:14px;border:1px solid var(--border);background:var(--panel-2)}
+.col.before{border-color:rgba(244,63,94,.45)}
+.col.after{border-color:rgba(16,185,129,.55)}
+.col h4{margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.col.before h4{color:var(--rose)}
+.col.after h4{color:var(--emerald)}
+.col ol{margin:0;padding-left:20px}
+.col li{margin-bottom:6px;font-size:15px}
+.col .empty{color:#64748B;font-style:italic}
+.scenario{background:var(--panel-2);border:1px dashed var(--amber);border-radius:12px;padding:14px;margin:10px 0}
+.scenario strong{color:var(--amber)}
+.mirror-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+@media (max-width:640px){.mirror-steps{grid-template-columns:1fr}}
+.mstep{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px}
+.mstep b{color:var(--cyan)}
+.opt{display:flex;width:100%;text-align:left;gap:12px;align-items:flex-start;background:var(--panel-2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 14px;margin:8px 0;font:inherit;cursor:pointer;min-height:44px}
+.opt:hover:not(:disabled){border-color:var(--cyan)}
+.opt:disabled{cursor:default}
+.opt .letter{flex:0 0 28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.12)}
+.opt.correct .letter{background:var(--emerald);color:#0F172A;border-color:var(--emerald)}
+.opt.wrong{border-color:var(--rose);background:rgba(244,63,94,.12)}
+.opt.wrong .letter{background:var(--rose);color:#0F172A;border-color:var(--rose)}
+.feedback{margin-top:6px;font-size:15px;min-height:1px}
+.feedback.good{color:#6EE7B7}
+.feedback.bad{color:#FDA4AF}
+.q{padding:14px 0;border-top:1px solid var(--border)}
+.q:first-of-type{border-top:none}
+.qnum{font-size:12px;color:var(--cyan);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.score{font-size:18px;font-weight:800;margin-top:10px}
+.score span{color:var(--emerald)}
+pre.summary{white-space:pre-wrap;word-wrap:break-word;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.6;max-height:520px;overflow:auto;color:var(--text)}
+.toast{min-height:22px;margin-top:8px;color:var(--emerald);font-weight:600;font-size:14px}
+.challenge{background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(16,185,129,.08));border:1px solid rgba(16,185,129,.4);border-radius:12px;padding:14px 16px;margin-top:14px}
+.challenge h3{margin-top:0;color:var(--emerald)}
+.challenge ol{margin:0;padding-left:20px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:24px 0 8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media print{
+  body{background:#fff;color:#000}
+  .wrap{max-width:none;padding:0}
+  .progress-wrap,.btn,.btn-row,.chips,.chain,.no-print,#mapCard,#mirrorCard,#quizCard,.toast{display:none!important}
+  .card{background:#fff;border:1px solid #999;color:#000;break-inside:avoid}
+  .badge{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .subtitle,.chip-step,.challenge h3{color:#000}
+  .summary-text,.muted{color:#333}
+  pre.summary{background:#fff;color:#000;border:1px solid #999;max-height:none;overflow:visible}
+  .challenge{background:#fff;border:1px solid #999}
+  footer{color:#333}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="badge" aria-hidden="true">Y</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 2 of 7</p>
+      <h1>Y — Yield the Narrative</h1>
+      <p class="subtitle">How Your Mind Affects Your Day • The Mind-Body Map</p>
+      <p class="summary-text">Right after a mistake, your brain automatically writes worst-case stories that flood your body with stress and change how you act. Yielding the narrative means hitting pause, mapping the five-stage Thought-Behavior Cycle, and swapping fearful self-talk for a clear, helpful replacement thought—while also learning to hand others the floor and listen like a clean mirror.</p>
+    </div>
+  </header>
+
+  <div class="progress-wrap" aria-label="Progress">
+    <div class="progress-label"><span>Your progress</span><span id="progressPct">0%</span></div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><div id="progressFill"></div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="card" id="mapCard" aria-labelledby="mapTitle">
+    <span class="chip-step">Step 1 · Yourself</span>
+    <h2 id="mapTitle">The Mind-Body Map</h2>
+    <div class="apply"><strong>How to Apply It to Yourself</strong>Yielding the narrative means hitting the pause button on your own excuses and actually listening to what your body is telling you. Remember: "your body doesn't lie"—your mouth can tell everyone you are totally fine, while your slumped shoulders, clenched jaw, and heavy sigh tell the real truth. Instead of repeating negative stories in your head like "I'm terrible at this today," stop talking, give up the microphone, and pay attention to what your body needs so you can get your mind back into clear focus.</div>
+    <p class="muted">Think of a specific moment recently when you made a mistake or held back out of worry. Map out the cycle. Tap any step in the chain to jump to it.</p>
+
+    <nav class="chain" id="chain" aria-label="Mind-Body Map steps"></nav>
+
+    <div class="step-panel" id="stepPanel">
+      <div class="step-count" id="stepCount"></div>
+      <label for="stepInput" id="stepLabel"></label>
+      <textarea id="stepInput"></textarea>
+      <div class="chips" id="bodyChips" hidden></div>
+      <div class="example" id="stepExample"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="backBtn" type="button">← Back</button>
+        <button class="btn btn-primary" id="nextBtn" type="button">Next →</button>
+      </div>
+    </div>
+
+    <div id="compareWrap" hidden>
+      <h3>Before vs. After</h3>
+      <div class="compare">
+        <div class="col before">
+          <h4>Old Cycle (Before)</h4>
+          <ol id="beforeList"></ol>
+        </div>
+        <div class="col after">
+          <h4>New Reset (After)</h4>
+          <ol id="afterList"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card" id="mirrorCard" aria-labelledby="mirrorTitle">
+    <span class="chip-step">Step 2 · Others</span>
+    <h2 id="mirrorTitle">Mirror Listening Practice</h2>
+    <div class="apply"><strong>How to Apply It to Others</strong>When someone around you is struggling, yielding means handing them the floor and letting them speak without interrupting or trying to show off your own fixes. Most people don't really listen; they just wait for their turn to talk. Instead, act like a clean mirror: use short nudges like "Keep going" or "Say more about that," paraphrase what you heard so they know you caught their point, and name the feeling underneath (like "That sounds super frustrating").</div>
+
+    <div class="scenario"><strong>Real-Life Scenario:</strong> Your teenage son comes home, drops his bag, and says, <em>"I'm never going back to that class. The teacher embarrassed me in front of everyone."</em> Your first instinct is to jump in with advice: "Well, did you do the homework?" or "When I was your age..."</div>
+
+    <div class="mirror-steps">
+      <div class="mstep"><b>1. Nudge</b><br>"Keep going" or "Say more about that."</div>
+      <div class="mstep"><b>2. Paraphrase</b><br>Put what you heard into your own words.</div>
+      <div class="mstep"><b>3. Name the feeling</b><br>"That sounds really frustrating."</div>
+    </div>
+
+    <h3>Quick check: Which response is a clean mirror?</h3>
+    <div id="mirrorCheck"></div>
+    <div class="feedback" id="mirrorCheckFb" aria-live="polite"></div>
+
+    <h3>Your turn — no advice, no fixes</h3>
+    <label for="nudge">1. My nudge</label>
+    <input type="text" id="nudge" data-key="nudge" placeholder='e.g., "That sounds rough. Tell me what happened."'>
+    <div class="chips" data-target="nudge"></div>
+
+    <label for="paraphrase">2. My paraphrase</label>
+    <textarea id="paraphrase" data-key="paraphrase" placeholder='e.g., "So the teacher pointed out your mistake in front of the whole class, and everyone saw it."'></textarea>
+    <div class="chips" data-target="paraphrase"></div>
+
+    <label for="feeling">3. The feeling I named</label>
+    <input type="text" id="feeling" data-key="feeling" placeholder='e.g., "That sounds really embarrassing—and maybe a little unfair."'>
+    <div class="chips" data-target="feeling"></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card" id="quizCard" aria-labelledby="quizTitle">
+    <span class="chip-step">Step 3 · Knowledge Check</span>
+    <h2 id="quizTitle">Knowledge Check</h2>
+    <p class="muted">Tap an answer. Each question locks once you choose.</p>
+    <div id="quiz"></div>
+    <div class="score" id="score" aria-live="polite">Score: <span>0 / 3</span></div>
+    <div class="btn-row"><button class="btn btn-secondary" id="retryBtn" type="button">Retry quiz</button></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card" id="summaryCard" aria-labelledby="sumTitle">
+    <span class="chip-step">Step 4 · Your Summary</span>
+    <h2 id="sumTitle">Your Yield the Narrative Summary</h2>
+    <pre class="summary" id="summary" tabindex="0" aria-label="Generated summary"></pre>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="copyBtn" type="button">Copy Summary</button>
+      <button class="btn btn-secondary" id="printBtn" type="button">Print / Save as PDF</button>
+      <button class="btn btn-secondary" id="resetBtn" type="button">Start Over</button>
+    </div>
+    <div class="toast" id="toast" aria-live="polite"></div>
+
+    <div class="challenge">
+      <h3>🎯 Try This Today — Catch One Story &amp; Hand Over the Mic</h3>
+      <ol>
+        <li><strong>Catch one story:</strong> The next time something goes a little wrong today (a spilled coffee, a late email, a fumbled word), notice the first story your mind writes. Write it down in a few words.</li>
+        <li><strong>Check your body:</strong> Where did you feel it? Tight chest? Hot face? Clenched hands?</li>
+        <li><strong>Swap it:</strong> Say one Helpful Replacement Thought to yourself, such as "That's just feedback. Breathe, look, and move forward."</li>
+        <li><strong>Hand over the mic:</strong> In one conversation today, don't share your own story or advice. Use only nudges ("Say more about that"), one paraphrase, and one named feeling. Notice how the other person responds.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var STORE_KEY = 'synapse-02-yield';
+
+  var STEPS = [
+    {key:'belief', short:'Belief', label:'The Belief: What were you afraid of?', ph:'e.g., "People here are judging me."', ex:'Example: "If I ask a question, they\'ll think I don\'t know what I\'m doing."'},
+    {key:'thought', short:'Thought', label:'The Thought: What did you tell yourself?', ph:'e.g., "Don\'t mess this part up."', ex:'Example: "Just stay quiet and nobody will notice."'},
+    {key:'body', short:'Body Feeling', label:'The Body Feeling: How did your body feel?', ph:'e.g., "My chest felt tight."', ex:'Tap any feelings below to add them, then add your own words.'},
+    {key:'behavior', short:'Behavior', label:'The Behavior: What physical action did you take?', ph:'e.g., "I stayed quiet instead of speaking up."', ex:'Example: "I stayed quiet instead of speaking up, even though I had a good idea about the schedule."'},
+    {key:'replace', short:'Replacement', label:'Helpful Replacement Thought: Write down a new, helpful thought to replace the old one next time.', ph:'e.g., Take a calm breath, read the room, and share my point clearly.', ex:'Example: "A slip-up is just useful feedback. Take a breath, look around, and move forward clearly."'}
+  ];
+  var BODY_CHIPS = ['tight chest','knotted stomach','racing heartbeat','shallow breathing','heavy limbs','hot face','clenched jaw'];
+
+  var MIRROR_CHIPS = {
+    nudge:['Keep going.','Say more about that.','Tell me what happened.','I\'m listening.'],
+    paraphrase:['So the teacher pointed out your mistake in front of everyone.','So you felt singled out in front of the whole class.'],
+    feeling:['That sounds really embarrassing.','That sounds really frustrating.','That sounds unfair.']
+  };
+
+  var MIRROR_CHECK = [
+    {text:'"Well, did you even do the homework? When I was your age, I never talked back to teachers."', ok:false, fb:'Not quite. This jumps straight to judging and comparing—he\'ll likely shut down instead of opening up.'},
+    {text:'"Whoa. So the teacher called you out in front of everyone? That sounds really embarrassing. Say more about that."', ok:true, fb:'Yes! A clean mirror: a paraphrase, a named feeling, and a nudge to keep going—no advice, no lecture.'},
+    {text:'"Don\'t worry about it. Just go back tomorrow and act like nothing happened."', ok:false, fb:'Not quite. This rushes to a fix and brushes past his feelings instead of letting him own his story.'}
+  ];
+
+  var QUIZ = [
+    {q:'Right after stumbling over a sentence in a work presentation, Sam thinks, "I just ruined the whole thing." Which stage of the Thought-Behavior Cycle is this?',
+     opts:['Core Belief','Automatic Thought','Body Feeling','Outer Behavior'], a:1,
+     exp:'An automatic thought is the instant reaction your mind produces right after a slip-up.'},
+    {q:'A coworker is venting about a frustrating client. Which response best shows "yielding the narrative" to them?',
+     opts:['"Oh, I had a way worse client last year—let me tell you about it."','"Here\'s exactly what you should have done instead."','"So the client changed the plan three times this week? That sounds exhausting. Keep going."','"Don\'t let it bother you; it\'s not a big deal."'], a:2,
+     exp:'Yielding means handing them the floor—paraphrasing what you heard, naming the feeling, and nudging them to keep talking instead of fixing or comparing.'},
+    {q:'Which is the best example of a Helpful Replacement Thought?',
+     opts:['"I always freeze under pressure, so I should avoid speaking."','"A slip-up is just useful feedback. Take a breath, look around, and move forward clearly."','"I need to be perfect or people will stop respecting me."','"Everyone else is better at this than I am."'], a:1,
+     exp:'A helpful replacement thought swaps fearful self-talk for a calm, clear instruction about what to do next.'}
+  ];
+
+  var CHALLENGE = [
+    'TRY THIS TODAY — Catch One Story & Hand Over the Mic',
+    '1. Catch one story: The next time something goes a little wrong today, notice the first story your mind writes. Write it down in a few words.',
+    '2. Check your body: Where did you feel it? Tight chest? Hot face? Clenched hands?',
+    '3. Swap it: Say one Helpful Replacement Thought to yourself, such as "That\'s just feedback. Breathe, look, and move forward."',
+    '4. Hand over the mic: In one conversation today, use only nudges, one paraphrase, and one named feeling. Notice how the other person responds.'
+  ].join('\n');
+
+  function blank(){
+    return {map:{belief:'',thought:'',body:'',behavior:'',replace:''}, step:0, nudge:'', paraphrase:'', feeling:'', mirrorPick:null, quiz:[null,null,null]};
+  }
+  var state = blank();
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(raw){
+        var d = JSON.parse(raw), b = blank();
+        if(d && typeof d === 'object'){
+          for(var k in b.map){ if(d.map && typeof d.map[k] === 'string') b.map[k] = d.map[k]; }
+          ['nudge','paraphrase','feeling'].forEach(function(k){ if(typeof d[k]==='string') b[k]=d[k]; });
+          if(typeof d.step==='number' && d.step>=0 && d.step<STEPS.length) b.step=d.step;
+          if(typeof d.mirrorPick==='number') b.mirrorPick=d.mirrorPick;
+          if(Array.isArray(d.quiz) && d.quiz.length===3) b.quiz=d.quiz.map(function(v){return typeof v==='number'?v:null;});
+          state = b;
+        }
+      }
+    }catch(e){}
+  }
+  function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+
+  function $(id){ return document.getElementById(id); }
+  function el(tag, cls, text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+  function filled(s){ return !!(s && s.trim()); }
+
+  function postHeight(){
+    try{ window.parent.postMessage({type:'synapse-widget-height', height:document.documentElement.scrollHeight}, '*'); }catch(e){}
+  }
+
+  /* ---------- Mind-Body Map ---------- */
+  var chain = $('chain'), stepInput = $('stepInput');
+  function renderChain(){
+    chain.innerHTML = '';
+    STEPS.forEach(function(s, i){
+      if(i>0){
+        var link = el('div','link');
+        if(filled(state.map[STEPS[i-1].key]) && filled(state.map[s.key])) link.classList.add('lit');
+        link.setAttribute('aria-hidden','true');
+        chain.appendChild(link);
+      }
+      var b = el('button','node' + (s.key==='replace'?' replace':''));
+      b.type='button';
+      if(filled(state.map[s.key])) b.classList.add('filled');
+      if(i===state.step){ b.classList.add('active'); b.setAttribute('aria-current','step'); }
+      b.setAttribute('aria-label','Step '+(i+1)+': '+s.short+(filled(state.map[s.key])?' (completed)':''));
+      var dot = el('span','dot', filled(state.map[s.key]) ? '✓' : String(i+1));
+      b.appendChild(dot);
+      b.appendChild(el('span','nlabel', s.short));
+      b.addEventListener('click', function(){ goStep(i); });
+      chain.appendChild(b);
+    });
+  }
+  function renderStep(){
+    var s = STEPS[state.step];
+    $('stepCount').textContent = 'Step ' + (state.step+1) + ' of 5';
+    $('stepLabel').textContent = s.label;
+    stepInput.placeholder = s.ph;
+    stepInput.value = state.map[s.key];
+    $('stepExample').textContent = s.ex;
+    var bc = $('bodyChips');
+    if(s.key==='body'){
+      bc.hidden = false; bc.innerHTML='';
+      BODY_CHIPS.forEach(function(c){
+        var ch = el('button','chip',c); ch.type='button';
+        var has = state.map.body.toLowerCase().indexOf(c)!==-1;
+        if(has) ch.classList.add('on');
+        ch.setAttribute('aria-pressed', has?'true':'false');
+        ch.addEventListener('click', function(){ toggleBody(c); });
+        bc.appendChild(ch);
+      });
+    } else { bc.hidden = true; }
+    $('backBtn').disabled = state.step===0;
+    $('nextBtn').textContent = state.step===STEPS.length-1 ? 'See Before vs. After ✓' : 'Next →';
+    renderChain();
+    renderCompare();
+  }
+  function toggleBody(c){
+    var t = state.map.body;
+    if(t.toLowerCase().indexOf(c)!==-1){
+      var re = new RegExp('(,\\s*)?' + c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '(\\s*,)?','i');
+      t = t.replace(re, function(m, a, b){ return (a && b) ? ', ' : ''; }).replace(/^\s*,\s*|\s*,\s*$/g,'').trim();
+    } else {
+      t = t.trim() ? t.replace(/[\s.]*$/,'') + ', ' + c : c.charAt(0).toUpperCase()+c.slice(1);
+    }
+    state.map.body = t;
+    stepInput.value = t;
+    save(); renderStep(); update();
+  }
+  function goStep(i){ state.step=i; save(); renderStep(); stepInput.focus(); update(); }
+  stepInput.addEventListener('input', function(){
+    state.map[STEPS[state.step].key] = stepInput.value; save();
+    renderChain(); renderCompare(); update();
+    if(STEPS[state.step].key==='body'){
+      var chips = $('bodyChips').querySelectorAll('.chip');
+      for(var i=0;i<chips.length;i++){ var on = stepInput.value.toLowerCase().indexOf(BODY_CHIPS[i])!==-1; chips[i].classList.toggle('on',on); chips[i].setAttribute('aria-pressed',on?'true':'false'); }
+    }
+  });
+  $('backBtn').addEventListener('click', function(){ if(state.step>0) goStep(state.step-1); });
+  $('nextBtn').addEventListener('click', function(){
+    if(state.step<STEPS.length-1) goStep(state.step+1);
+    else { $('compareWrap').hidden=false; renderCompare(); $('compareWrap').scrollIntoView({behavior:'smooth',block:'nearest'}); postHeight(); }
+  });
+  function li(label, val){
+    var l = el('li');
+    var b = el('strong', null, label + ': '); l.appendChild(b);
+    if(filled(val)) l.appendChild(document.createTextNode(val.trim()));
+    else l.appendChild(el('span','empty','not filled in yet'));
+    return l;
+  }
+  function renderCompare(){
+    var m = state.map, any = filled(m.replace) || STEPS.every(function(s){return filled(m[s.key]);});
+    if(any) $('compareWrap').hidden=false;
+    var bl=$('beforeList'), al=$('afterList'); bl.innerHTML=''; al.innerHTML='';
+    bl.appendChild(li('Belief', m.belief));
+    bl.appendChild(li('Thought', m.thought));
+    bl.appendChild(li('Body', m.body));
+    bl.appendChild(li('Behavior', m.behavior));
+    al.appendChild(li('Pause', 'Notice the old story starting and give up the microphone.'));
+    al.appendChild(li('Breathe', 'One calm breath to settle the ' + (filled(m.body) ? m.body.trim().toLowerCase() : 'body feeling') + '.'));
+    al.appendChild(li('New Thought', m.replace));
+    al.appendChild(li('New Behavior', 'Act on the new thought—look around, speak up, and move forward clearly.'));
+  }
+
+  /* ---------- Mirror ---------- */
+  function renderMirrorCheck(){
+    var box=$('mirrorCheck'); box.innerHTML='';
+    MIRROR_CHECK.forEach(function(r,i){
+      var b = el('button','opt'); b.type='button';
+      b.appendChild(el('span','letter', String.fromCharCode(65+i)));
+      b.appendChild(el('span',null,r.text));
+      if(state.mirrorPick!==null){
+        if(r.ok) b.classList.add('correct');
+        else if(i===state.mirrorPick) b.classList.add('wrong');
+      }
+      b.addEventListener('click', function(){ state.mirrorPick=i; save(); renderMirrorCheck(); update(); });
+      box.appendChild(b);
+    });
+    var fb=$('mirrorCheckFb');
+    if(state.mirrorPick!==null){
+      var r=MIRROR_CHECK[state.mirrorPick];
+      fb.textContent = r.fb + (r.ok ? '' : ' Try another option.');
+      fb.className = 'feedback ' + (r.ok?'good':'bad');
+    } else { fb.textContent=''; fb.className='feedback'; }
+  }
+  ['nudge','paraphrase','feeling'].forEach(function(k){
+    var inp=$(k); inp.value=state[k];
+    inp.addEventListener('input', function(){ state[k]=inp.value; save(); update(); });
+  });
+  var chipBoxes = document.querySelectorAll('.chips[data-target]');
+  for(var ci=0; ci<chipBoxes.length; ci++){
+    (function(box){
+      var k = box.getAttribute('data-target');
+      MIRROR_CHIPS[k].forEach(function(t){
+        var c=el('button','chip','+ '+t); c.type='button';
+        c.addEventListener('click', function(){
+          var inp=$(k); var cur=inp.value.trim();
+          inp.value = cur ? cur + ' ' + t : t;
+          state[k]=inp.value; save(); update(); inp.focus();
+        });
+        box.appendChild(c);
+      });
+    })(chipBoxes[ci]);
+  }
+
+  /* ---------- Quiz ---------- */
+  function renderQuiz(){
+    var box=$('quiz'); box.innerHTML='';
+    QUIZ.forEach(function(item, qi){
+      var wrap=el('div','q');
+      wrap.appendChild(el('div','qnum','Question '+(qi+1)));
+      var qp = el('p',null,item.q); qp.style.fontWeight='600'; qp.id='q'+qi; wrap.appendChild(qp);
+      var grp = el('div'); grp.setAttribute('role','group'); grp.setAttribute('aria-labelledby','q'+qi);
+      var picked = state.quiz[qi];
+      item.opts.forEach(function(o, oi){
+        var b=el('button','opt'); b.type='button';
+        b.appendChild(el('span','letter', String.fromCharCode(65+oi)));
+        b.appendChild(el('span',null,o));
+        if(picked!==null){
+          b.disabled=true;
+          if(oi===item.a) b.classList.add('correct');
+          else if(oi===picked) b.classList.add('wrong');
+        }
+        b.addEventListener('click', function(){ if(state.quiz[qi]!==null) return; state.quiz[qi]=oi; save(); renderQuiz(); update(); });
+        grp.appendChild(b);
+      });
+      wrap.appendChild(grp);
+      var fb=el('div','feedback'); fb.setAttribute('aria-live','polite');
+      if(picked!==null){
+        var ok = picked===item.a;
+        fb.className='feedback '+(ok?'good':'bad');
+        fb.textContent=(ok?'Correct! ':'Not quite — the answer is '+String.fromCharCode(65+item.a)+'. ')+item.exp;
+      }
+      wrap.appendChild(fb);
+      box.appendChild(wrap);
+    });
+    $('score').innerHTML='';
+    $('score').appendChild(document.createTextNode('Score: '));
+    $('score').appendChild(el('span',null, quizScore()+' / 3'));
+  }
+  function quizScore(){ var s=0; QUIZ.forEach(function(q,i){ if(state.quiz[i]===q.a) s++; }); return s; }
+  function quizDone(){ return state.quiz.every(function(v){return v!==null;}); }
+  $('retryBtn').addEventListener('click', function(){ state.quiz=[null,null,null]; save(); renderQuiz(); update(); });
+
+  /* ---------- Summary & progress ---------- */
+  function v(s){ return filled(s) ? s.trim() : '—'; }
+  function buildSummary(){
+    var m=state.map, L=[];
+    L.push('SYNAPSE™ LIFE & PERFORMANCE');
+    L.push('Pillar 2 of 7 — Y: Yield the Narrative');
+    L.push('How Your Mind Affects Your Day • The Mind-Body Map');
+    L.push('Date: ' + new Date().toLocaleDateString());
+    L.push('');
+    L.push('— MY MIND-BODY MAP (How to Apply It to Yourself) —');
+    L.push('1. The Belief (what I was afraid of): ' + v(m.belief));
+    L.push('2. The Thought (what I told myself): ' + v(m.thought));
+    L.push('3. The Body Feeling: ' + v(m.body));
+    L.push('4. The Behavior (what I did): ' + v(m.behavior));
+    L.push('5. Helpful Replacement Thought: ' + v(m.replace));
+    L.push('');
+    L.push('— MIRROR LISTENING (How to Apply It to Others) —');
+    L.push('Nudge: ' + v(state.nudge));
+    L.push('Paraphrase: ' + v(state.paraphrase));
+    L.push('Feeling named: ' + v(state.feeling));
+    L.push('');
+    L.push('— KNOWLEDGE CHECK —');
+    L.push('Score: ' + quizScore() + ' / 3' + (quizDone() ? '' : ' (in progress)'));
+    L.push('');
+    L.push(CHALLENGE);
+    return L.join('\n');
+  }
+  function update(){
+    var parts = [
+      STEPS.every(function(s){ return filled(state.map[s.key]); }),
+      filled(state.nudge) && filled(state.paraphrase) && filled(state.feeling) && state.mirrorPick!==null && MIRROR_CHECK[state.mirrorPick].ok,
+      quizDone()
+    ];
+    var mapFrac = STEPS.filter(function(s){ return filled(state.map[s.key]); }).length / STEPS.length;
+    var mirFrac = ([state.nudge,state.paraphrase,state.feeling].filter(filled).length + (state.mirrorPick!==null && MIRROR_CHECK[state.mirrorPick].ok ? 1:0)) / 4;
+    var qFrac = state.quiz.filter(function(x){return x!==null;}).length/3;
+    var pct = Math.round(((mapFrac + mirFrac + qFrac) / 3) * 100);
+    if(parts.every(Boolean)) pct = 100;
+    $('progressFill').style.width = pct + '%';
+    $('progressPct').textContent = pct + '%';
+    $('progressBar').setAttribute('aria-valuenow', String(pct));
+    $('summary').textContent = buildSummary();
+    postHeight();
+  }
+
+  function toast(msg){ var t=$('toast'); t.textContent=msg; clearTimeout(toast._t); toast._t=setTimeout(function(){ t.textContent=''; postHeight(); }, 4000); }
+  function selectSummary(){
+    try{ var r=document.createRange(); r.selectNodeContents($('summary')); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+  }
+  function fallbackCopy(text){
+    try{
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
+      ta.style.position='fixed'; ta.style.top='-1000px'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      var ok=document.execCommand('copy'); document.body.removeChild(ta); return ok;
+    }catch(e){ return false; }
+  }
+  $('copyBtn').addEventListener('click', function(){
+    var text=buildSummary();
+    function fail(){ if(fallbackCopy(text)) toast('✓ Summary copied to your clipboard.'); else { selectSummary(); toast('Summary selected — press Ctrl/Cmd+C to copy.'); } }
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ toast('✓ Summary copied to your clipboard.'); }, fail);
+      } else fail();
+    }catch(e){ fail(); }
+  });
+  $('printBtn').addEventListener('click', function(){ $('summary').textContent=buildSummary(); window.print(); });
+  $('resetBtn').addEventListener('click', function(){
+    if(!window.confirm('Start over? This clears everything you have entered in this activity.')) return;
+    try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+    state = blank();
+    ['nudge','paraphrase','feeling'].forEach(function(k){ $(k).value=''; });
+    $('compareWrap').hidden = true;
+    renderStep(); renderMirrorCheck(); renderQuiz(); update();
+    toast('Cleared. Fresh start.');
+    window.scrollTo(0,0);
+  });
+
+  window.addEventListener('resize', postHeight);
+  window.addEventListener('load', postHeight);
+
+  load();
+  ['nudge','paraphrase','feeling'].forEach(function(k){ $(k).value=state[k]; });
+  renderStep(); renderMirrorCheck(); renderQuiz(); update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SYNAPSE — S: Situated Empathy</title>
+<style>
+  :root{
+    --bg:#0F172A; --panel:#1E293B; --panel-2:#162033; --border:#334155;
+    --text:#E2E8F0; --muted:#94A3B8; --cyan:#22D3EE; --emerald:#10B981;
+    --amber:#F59E0B; --rose:#F43F5E; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:880px;margin:0 auto;padding:16px}
+  @media(min-width:640px){.wrap{padding:28px}}
+  /* Header */
+  header.hero{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+  .badge{flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A;font-weight:800;font-size:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(34,211,238,.12),0 8px 24px rgba(16,185,129,.25)}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+  h1{font-size:clamp(24px,4vw,32px);margin:0 0 4px;line-height:1.2}
+  .subtitle{color:var(--cyan);font-weight:600;margin:0 0 8px}
+  .summary-lead{color:var(--muted);margin:0}
+  /* Progress */
+  .progress{position:sticky;top:0;z-index:5;background:rgba(15,23,42,.92);backdrop-filter:blur(6px);padding:10px 0;margin-bottom:12px}
+  .progress-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .bar{height:6px;background:var(--panel);border-radius:99px;overflow:hidden}
+  .bar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--emerald));transition:width .4s ease}
+  /* Cards */
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:0 0 18px}
+  @media(min-width:640px){.card{padding:24px}}
+  .chip{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);padding:4px 10px;border-radius:99px;margin-bottom:10px}
+  h2{font-size:20px;margin:0 0 6px}
+  h3{font-size:16px;margin:18px 0 8px}
+  p{margin:0 0 10px}
+  .muted{color:var(--muted)}
+  .apply{background:var(--panel-2);border-left:3px solid var(--emerald);border-radius:10px;padding:12px 14px;margin:10px 0 16px;font-size:14px;color:#CBD5E1}
+  .apply strong{color:var(--emerald)}
+  label{display:block;font-weight:600;margin:14px 0 6px}
+  textarea,input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;font:inherit;font-size:15px;min-height:44px;resize:vertical}
+  textarea{min-height:84px}
+  textarea::placeholder,input::placeholder{color:#64748B}
+  textarea:focus,input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.2)}
+  :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 18px;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text);transition:transform .15s,border-color .15s,background .15s}
+  .btn:hover{border-color:var(--cyan)}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:linear-gradient(135deg,var(--cyan),var(--emerald));color:#0F172A;border:none}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  /* Body check */
+  .pill-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .pill{min-height:44px;padding:8px 14px;border-radius:99px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:inherit;font-size:14px;cursor:pointer;transition:all .15s}
+  .pill[aria-pressed="true"]{background:rgba(245,158,11,.15);border-color:var(--amber);color:#FDE68A}
+  .meter{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  input[type=range]{flex:1;min-width:200px;accent-color:var(--cyan);height:44px}
+  .gauge{min-width:120px;text-align:center;padding:8px 12px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border);font-weight:700}
+  .gauge .num{font-size:28px;display:block;line-height:1}
+  .body-figure{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .body-figure svg{width:110px;height:auto;flex:0 0 auto}
+  .body-figure svg .zone{fill:#334155;transition:fill .3s}
+  .body-figure svg .zone.on{fill:var(--amber)}
+  .readout{flex:1;min-width:220px;background:var(--panel-2);border:1px dashed var(--border);border-radius:10px;padding:12px;font-size:14px}
+  /* RESPECT cards */
+  .respect-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+  .rcard{position:relative;text-align:left;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;color:var(--text);font:inherit;min-height:130px;transition:transform .2s,border-color .2s,box-shadow .2s}
+  .rcard:hover{transform:translateY(-2px);border-color:var(--cyan)}
+  .rcard .L{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent;display:block;line-height:1}
+  .rcard .t{display:block;font-weight:700;font-size:14px;margin:6px 0 4px}
+  .rcard .d{display:block;font-size:12.5px;color:var(--muted)}
+  .rcard[aria-pressed="true"]{border-color:var(--emerald);box-shadow:0 0 0 2px rgba(16,185,129,.35),0 8px 24px rgba(16,185,129,.15)}
+  .rcard[aria-pressed="true"]::after{content:"✓";position:absolute;top:10px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--emerald);color:#0F172A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .scenario{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14.5px}
+  .scenario b{color:var(--cyan)}
+  .plan-preview{margin-top:14px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(16,185,129,.08));border:1px solid rgba(16,185,129,.35);border-radius:12px;padding:14px;font-size:14.5px;white-space:pre-wrap}
+  /* Quiz */
+  .q{margin:0 0 20px}
+  .q-text{font-weight:600;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;min-height:44px;margin:0 0 8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:inherit;font-size:14.5px;cursor:pointer;transition:all .15s}
+  .opt:hover:not(:disabled){border-color:var(--cyan)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--emerald);background:rgba(16,185,129,.15)}
+  .opt.wrong{border-color:var(--rose);background:rgba(244,63,94,.12)}
+  .explain{font-size:14px;padding:10px 12px;border-radius:10px;background:var(--panel-2);margin-top:4px}
+  .explain:empty{display:none}
+  .score{font-weight:700;font-size:18px}
+  /* Summary */
+  pre.out{white-space:pre-wrap;word-wrap:break-word;background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.6;max-height:520px;overflow:auto;margin:0}
+  .toast{min-height:22px;margin-top:8px;font-size:14px;color:var(--emerald)}
+  .challenge{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.35);border-radius:12px;padding:14px;font-size:14.5px}
+  .challenge ol{margin:6px 0 0;padding-left:20px}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;padding:10px 0 24px}
+  @media(max-width:639px){header.hero{flex-direction:column;gap:12px}.respect-grid{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+  .print-only{display:none}
+  @media print{
+    body{background:#fff;color:#000}
+    .progress,.btn-row,.btn,.respect-grid,.pill-grid,.body-figure svg,input[type=range],#quizCard,.no-print{display:none!important}
+    .card{background:#fff;border:1px solid #ccc;break-inside:avoid}
+    pre.out{background:#fff;color:#000;border:none;max-height:none;overflow:visible}
+    .badge{box-shadow:none}
+    .subtitle,.chip{color:#000}
+    .muted,.summary-lead{color:#333}
+    .print-only{display:block}
+    .screen-only{display:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="badge" aria-hidden="true">S</div>
+    <div>
+      <p class="eyebrow">SYNAPSE™ Life &amp; Performance • Pillar 1 of 7</p>
+      <h1>S — Situated Empathy</h1>
+      <p class="subtitle">Honest Self-Check &amp; The RESPECT Action Plan</p>
+      <p class="summary-lead">Empathy is not soft or weak—it is a sharp awareness skill that starts with being honest about the pressure you are carrying right now, because your body doesn't lie. Once you can see your own stress clearly, you can step into other people's shoes using the RESPECT action plan so they feel safe rather than judged.</p>
+    </div>
+  </header>
+
+  <div class="progress" role="region" aria-label="Your progress">
+    <div class="progress-row"><span>Your progress</span><span id="progText">0 of 4 steps</span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progBar"><span id="progFill"></span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="card" id="step1" aria-labelledby="s1h">
+    <span class="chip">Step 1 · Yourself</span>
+    <h2 id="s1h">The Honest Body &amp; Stress Self-Check</h2>
+    <div class="apply"><strong>How to Apply It to Yourself:</strong> Situated empathy starts by being completely honest about what you are dealing with right now instead of pretending to be a superhero who never feels pressure. If you feel nervous, frustrated, or scattered, that reaction makes total sense given what is happening in your life. Instead of beating yourself up for not being perfect, give yourself space to breathe, recharge, and reset from where you actually stand.</div>
+
+    <label for="stress">1. Honest Self-Check: What pressure or stress are you carrying right now?</label>
+    <textarea id="stress" data-key="stress" placeholder="e.g., Exhausted from long hours and feeling pressure to get everything right..."></textarea>
+
+    <h3>2. Body Scan: Where do you feel it in your body right now?</h3>
+    <p class="muted" style="font-size:14px">Your body doesn't lie. Tap everything you notice.</p>
+    <div class="body-figure">
+      <svg viewBox="0 0 100 200" role="img" aria-label="Body outline highlighting the areas you selected">
+        <circle class="zone" data-zone="head" cx="50" cy="22" r="16"/>
+        <rect class="zone" data-zone="jaw" x="40" y="32" width="20" height="8" rx="4"/>
+        <rect class="zone" data-zone="shoulders" x="18" y="46" width="64" height="12" rx="6"/>
+        <rect class="zone" data-zone="chest" x="30" y="60" width="40" height="26" rx="8"/>
+        <rect class="zone" data-zone="stomach" x="32" y="88" width="36" height="24" rx="8"/>
+        <rect class="zone" data-zone="hands" x="6" y="60" width="10" height="56" rx="5"/>
+        <rect class="zone" data-zone="hands" x="84" y="60" width="10" height="56" rx="5"/>
+        <rect class="zone" data-zone="legs" x="33" y="116" width="14" height="76" rx="7"/>
+        <rect class="zone" data-zone="legs" x="53" y="116" width="14" height="76" rx="7"/>
+      </svg>
+      <div style="flex:1;min-width:220px">
+        <div class="pill-grid" id="bodyPills"></div>
+      </div>
+    </div>
+
+    <h3>3. Stress Level: Where are you today?</h3>
+    <div class="meter">
+      <input type="range" id="level" data-key="level" min="1" max="10" step="1" value="5" aria-describedby="levelOut">
+      <div class="gauge" id="levelOut" aria-live="polite"><span class="num" id="levelNum">5</span><span id="levelWord" style="font-size:12px">Holding steady</span></div>
+    </div>
+
+    <label for="mask">4. The Mask Check: What have you been telling people ("I'm fine," "It's all good") that doesn't match what your body is saying?</label>
+    <textarea id="mask" data-key="mask" placeholder="e.g., I told my manager I'm 'totally on top of it,' but I've been rushing through everything..."></textarea>
+
+    <label for="kind">5. Kind Self-Talk: What would you say to a good friend in your exact situation? Say it to yourself.</label>
+    <textarea id="kind" data-key="kind" placeholder="e.g., Of course you feel stretched thin—you're juggling a lot. You just have to take the next step."></textarea>
+
+    <label for="reset">6. One Small Reset: What can you do in the next hour to breathe, recharge, or reset from where you actually stand?</label>
+    <input type="text" id="reset" data-key="reset" placeholder="e.g., Step outside for five minutes without my phone and drop my shoulders">
+
+    <div class="readout" id="selfReadout" style="margin-top:16px" aria-live="polite"></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="card" id="step2" aria-labelledby="s2h">
+    <span class="chip">Step 2 · Others</span>
+    <h2 id="s2h">The RESPECT Card Picker &amp; Action Plan</h2>
+    <div class="apply"><strong>How to Apply It to Others:</strong> When working or living alongside others, situated empathy means stepping into their shoes so they feel safe rather than judged. When people feel safe around you, they drop the fake mask and show up with real openness and confidence.</div>
+
+    <div class="scenario"><b>Real-life scenario:</b> Jordan, a coworker on your team, has missed two deadlines this month. In today's meeting, they kept their eyes down, gave one-word answers, and left as soon as it ended. A few people are grumbling that Jordan "doesn't care anymore." You've noticed Jordan's shoulders are tense and they've been taking a lot of personal phone calls in the hallway.</div>
+
+    <h3>Pick 1–2 RESPECT cards you'll practice this week</h3>
+    <div class="respect-grid" id="respectGrid" role="group" aria-label="RESPECT cards"></div>
+
+    <label for="who">Who are you thinking of? (first name or initials only)</label>
+    <input type="text" id="who" data-key="who" placeholder="e.g., Jordan / my sister / J.M.">
+
+    <label for="signals">What stress signals have you noticed?</label>
+    <input type="text" id="signals" data-key="signals" placeholder="e.g., Tense shoulders, head down, short answers">
+
+    <label for="words">The exact words you'll use to open the conversation</label>
+    <textarea id="words" data-key="words" placeholder="e.g., Check for stress signals and ask what they think will help"></textarea>
+    <div class="btn-row no-print" style="margin-top:8px">
+      <button type="button" class="btn" id="suggestWords">Suggest opening words</button>
+    </div>
+
+    <h3>Your RESPECT Action Plan</h3>
+    <div class="plan-preview" id="planPreview" aria-live="polite"></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="card" id="quizCard" aria-labelledby="s3h">
+    <span class="chip">Step 3 · Knowledge Check</span>
+    <h2 id="s3h">Quick Knowledge Check</h2>
+    <p class="muted">Choose the best answer. You'll see why right away.</p>
+    <div id="quiz"></div>
+    <p class="score" id="score" aria-live="polite">Score: 0 / 3</p>
+    <div class="btn-row"><button type="button" class="btn" id="retryQuiz">Retry quiz</button></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="card" id="step4" aria-labelledby="s4h">
+    <span class="chip">Step 4 · Your Summary</span>
+    <h2 id="s4h">Your Situated Empathy Summary</h2>
+    <p class="muted screen-only">This updates as you type. Copy it into your journal or the lesson discussion, or print / save it as a PDF.</p>
+    <pre class="out" id="out" tabindex="0" aria-label="Your summary"></pre>
+    <div class="btn-row">
+      <button type="button" class="btn primary" id="copyBtn">Copy Summary</button>
+      <button type="button" class="btn" id="printBtn">Print / Save as PDF</button>
+      <button type="button" class="btn" id="resetBtn">Start Over</button>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <h3>🎯 Try This Today — The "Body Doesn't Lie" Check-In</h3>
+    <div class="challenge">
+      <ol>
+        <li><b>Three times in the next 24 hours</b> (morning, midday, evening), pause for 30 seconds and scan your jaw, shoulders, chest, stomach, and breathing. Name what you notice.</li>
+        <li><b>Once today</b>, notice a stress signal in someone else and use one RESPECT step: <i>"Do you need a minute? What would help?"</i></li>
+        <li><b>Before bed</b>, write: <i>"Today I noticed ___ in myself, and ___ in someone else."</i></li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>SYNAPSE™ Life &amp; Performance • Clear Thinking, Everyday Mental Fitness, and Practical Mindfulness</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "synapse-01-situated-empathy";
+  var $ = function(id){ return document.getElementById(id); };
+
+  var BODY = [
+    {id:"jaw", label:"Clenched jaw", zone:"jaw"},
+    {id:"shoulders", label:"Raised or tight shoulders", zone:"shoulders"},
+    {id:"chest", label:"Tight chest", zone:"chest"},
+    {id:"stomach", label:"Knotted stomach", zone:"stomach"},
+    {id:"heart", label:"Racing heartbeat", zone:"chest"},
+    {id:"breath", label:"Shallow breathing", zone:"chest"},
+    {id:"limbs", label:"Heavy limbs", zone:"legs"},
+    {id:"restless", label:"Restless hands or legs", zone:"hands"},
+    {id:"head", label:"Headache", zone:"head"}
+  ];
+
+  var RESPECT = [
+    {id:"R", t:"Respect what matters to them", d:"Care about what's going on in their world (family, school, work, life) before jumping into tasks or goals.", say:"Before we get into work stuff—how are things going for you outside of here?"},
+    {id:"E1", L:"E", t:"Engage at their speed", d:"Don't rush them to \"just get over it\"; meet their pace and give them time to speak.", say:"No rush at all. Take whatever time you need—I'm listening."},
+    {id:"S", t:"Sit in their shoes", d:"Try to understand why they see things the way they do instead of assuming your way is the only way.", say:"Help me understand how this looks from where you're standing."},
+    {id:"P", t:"Practice listening without judging", d:"Listen to their feelings rather than keeping score of their mistakes.", say:"I'm not here to judge anything. I just want to hear how you're doing."},
+    {id:"E2", L:"E", t:"Ensure they have choices", d:"Don't boss them around; ask what they think will help.", say:"What do you think would make this week a little easier for you?"},
+    {id:"C", t:"Check for stress signals", d:"Pay attention when their shoulders tense up or their head drops, and ask if they need a breath.", say:"Hey, you seemed like you had a lot on your mind today. Do you need a minute?"},
+    {id:"T", t:"Treat trust like a group agreement", d:"Keep showing up for them every day so they know you truly have their back.", say:"I've got your back—I'll check in again tomorrow, and the day after that."}
+  ];
+
+  var QUIZ = [
+    {q:"Maria tells her team, \"I'm fine, really,\" but her jaw is clenched, her shoulders are up by her ears, and she is rushing through every task. According to Situated Empathy, what is the most accurate read?",
+     o:["She is fine because she said so, and it would be rude to question it.","Her body is showing signs that her internal stress alarm is going off, even though her words say otherwise.","She is being dishonest and should be called out in front of the team.","She is simply a fast worker who prefers to move quickly."],
+     a:1, e:"Your body doesn't lie—a clenched jaw, raised shoulders, and rushed movements often reveal stress that words try to hide."},
+    {q:"A friend is upset after a hard week, and you immediately say, \"You just need to get over it and move on.\" Which RESPECT step did you skip?",
+     o:["T — Treat trust like a group agreement","C — Check for stress signals","E — Engage at their speed","R — Respect what matters to them"],
+     a:2, e:"Engaging at their speed means not rushing someone to \"just get over it\" and giving them time to speak at their own pace."},
+    {q:"You've been sleeping badly, worrying about bills, and you snapped at a family member this morning. What does applying Situated Empathy to yourself look like?",
+     o:["Telling yourself to toughen up and ignore it until the weekend.","Pretending everything is fine so no one worries about you.","Being honest about what you're carrying, recognizing your reaction makes sense, and giving yourself space to reset.","Avoiding everyone until the stress passes on its own."],
+     a:2, e:"Situated empathy starts with being honest about your own pressure without getting angry at yourself, then resetting from where you actually stand."}
+  ];
+
+  var CHALLENGE = "TRY THIS TODAY — The \"Body Doesn't Lie\" Check-In\n" +
+    "1. Three times in the next 24 hours (morning, midday, evening), pause for 30 seconds and scan your jaw, shoulders, chest, stomach, and breathing. Name what you notice.\n" +
+    "2. Once today, notice a stress signal in someone else and use one RESPECT step: \"Do you need a minute? What would help?\"\n" +
+    "3. Before bed, write: \"Today I noticed ___ in myself, and ___ in someone else.\"";
+
+  var state = {stress:"", mask:"", kind:"", reset:"", level:5, body:[], respect:[], who:"", signals:"", words:"", quiz:[null,null,null]};
+
+  function load(){
+    try{
+      var raw = window.localStorage.getItem(KEY);
+      if(raw){ var s = JSON.parse(raw); for(var k in state){ if(Object.prototype.hasOwnProperty.call(s,k)) state[k]=s[k]; } }
+    }catch(e){}
+    if(!Array.isArray(state.quiz) || state.quiz.length!==3) state.quiz=[null,null,null];
+  }
+  function save(){ try{ window.localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  function postHeight(){
+    try{ window.parent.postMessage({type:"synapse-widget-height", height: document.documentElement.scrollHeight}, "*"); }catch(e){}
+  }
+
+  function levelWord(n){
+    if(n<=2) return "Calm & steady";
+    if(n<=4) return "A little tension";
+    if(n<=6) return "Holding steady";
+    if(n<=8) return "Alarm is rising";
+    return "Alarm bells ringing";
+  }
+  function levelColor(n){ return n<=3 ? "var(--emerald)" : n<=6 ? "var(--cyan)" : n<=8 ? "var(--amber)" : "var(--rose)"; }
+
+  /* ---------- Build body pills ---------- */
+  function buildBody(){
+    var wrap = $("bodyPills");
+    BODY.forEach(function(b){
+      var btn = document.createElement("button");
+      btn.type="button"; btn.className="pill"; btn.textContent=b.label;
+      btn.setAttribute("aria-pressed", state.body.indexOf(b.id)>-1 ? "true":"false");
+      btn.addEventListener("click", function(){
+        var i = state.body.indexOf(b.id);
+        if(i>-1) state.body.splice(i,1); else state.body.push(b.id);
+        btn.setAttribute("aria-pressed", i>-1 ? "false":"true");
+        update();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+  function paintBody(){
+    var zones = {};
+    state.body.forEach(function(id){ BODY.forEach(function(b){ if(b.id===id) zones[b.zone]=true; }); });
+    var els = document.querySelectorAll(".body-figure svg .zone");
+    for(var i=0;i<els.length;i++){ els[i].classList.toggle("on", !!zones[els[i].getAttribute("data-zone")]); }
+  }
+  function bodyLabels(){
+    return BODY.filter(function(b){ return state.body.indexOf(b.id)>-1; }).map(function(b){ return b.label.toLowerCase(); });
+  }
+
+  /* ---------- RESPECT cards ---------- */
+  function buildRespect(){
+    var grid = $("respectGrid");
+    RESPECT.forEach(function(r){
+      var btn = document.createElement("button");
+      btn.type="button"; btn.className="rcard";
+      btn.setAttribute("aria-pressed", state.respect.indexOf(r.id)>-1 ? "true":"false");
+      var L = document.createElement("span"); L.className="L"; L.textContent = r.L || r.id;
+      var t = document.createElement("span"); t.className="t"; t.textContent = r.t;
+      var d = document.createElement("span"); d.className="d"; d.textContent = r.d;
+      btn.appendChild(L); btn.appendChild(t); btn.appendChild(d);
+      btn.addEventListener("click", function(){
+        var i = state.respect.indexOf(r.id);
+        if(i>-1){ state.respect.splice(i,1); }
+        else{
+          if(state.respect.length>=2){
+            var dropped = state.respect.shift();
+            var old = grid.querySelector('[data-id="'+dropped+'"]');
+            if(old) old.setAttribute("aria-pressed","false");
+          }
+          state.respect.push(r.id);
+        }
+        btn.setAttribute("aria-pressed", state.respect.indexOf(r.id)>-1 ? "true":"false");
+        update();
+      });
+      btn.setAttribute("data-id", r.id);
+      grid.appendChild(btn);
+    });
+  }
+  function chosenRespect(){
+    return RESPECT.filter(function(r){ return state.respect.indexOf(r.id)>-1; });
+  }
+
+  /* ---------- Quiz ---------- */
+  var LET = ["A","B","C","D"];
+  function buildQuiz(){
+    var host = $("quiz"); host.textContent="";
+    QUIZ.forEach(function(item, qi){
+      var box = document.createElement("div"); box.className="q";
+      var qt = document.createElement("div"); qt.className="q-text"; qt.textContent = (qi+1)+". "+item.q;
+      box.appendChild(qt);
+      var opts = [];
+      item.o.forEach(function(text, oi){
+        var b = document.createElement("button"); b.type="button"; b.className="opt";
+        b.textContent = LET[oi]+") "+text;
+        b.addEventListener("click", function(){ state.quiz[qi]=oi; paintQ(); update(); });
+        box.appendChild(b); opts.push(b);
+      });
+      var ex = document.createElement("div"); ex.className="explain"; ex.setAttribute("aria-live","polite");
+      box.appendChild(ex);
+      item._opts = opts; item._ex = ex;
+      host.appendChild(box);
+    });
+    paintQ();
+  }
+  function paintQ(){
+    QUIZ.forEach(function(item, qi){
+      var pick = state.quiz[qi];
+      item._opts.forEach(function(b, oi){
+        b.classList.remove("correct","wrong");
+        b.disabled = pick!==null;
+        if(pick!==null){
+          if(oi===item.a) b.classList.add("correct");
+          else if(oi===pick) b.classList.add("wrong");
+        }
+      });
+      item._ex.textContent = pick===null ? "" : (pick===item.a ? "✅ Correct! " : "❌ Not quite — the answer is "+LET[item.a]+". ") + item.e;
+    });
+  }
+  function quizScore(){ var s=0; QUIZ.forEach(function(it,i){ if(state.quiz[i]===it.a) s++; }); return s; }
+  function quizDone(){ return state.quiz.every(function(v){ return v!==null; }); }
+
+  /* ---------- Inputs ---------- */
+  function bindInputs(){
+    var els = document.querySelectorAll("[data-key]");
+    for(var i=0;i<els.length;i++){
+      (function(el){
+        var k = el.getAttribute("data-key");
+        el.value = state[k];
+        el.addEventListener("input", function(){ state[k] = (k==="level") ? parseInt(el.value,10) : el.value; update(); });
+      })(els[i]);
+    }
+  }
+
+  /* ---------- Renders ---------- */
+  function renderSelf(){
+    var n = state.level;
+    $("levelNum").textContent = n;
+    $("levelWord").textContent = levelWord(n);
+    $("levelOut").style.borderColor = levelColor(n);
+    $("levelNum").style.color = levelColor(n);
+    var r = $("selfReadout"); r.textContent="";
+    var parts = bodyLabels();
+    var line1 = document.createElement("div");
+    line1.textContent = parts.length ? ("Your body is saying: " + parts.join(", ") + ".") : "Tap the body signals above to see what your body is saying.";
+    r.appendChild(line1);
+    var line2 = document.createElement("div"); line2.style.marginTop="6px"; line2.className="muted";
+    if(n>=7) line2.textContent = "A "+n+" makes total sense given what you're carrying. This is a signal to breathe and reset—not a reason to be hard on yourself.";
+    else if(n>=4) line2.textContent = "A "+n+" — you're carrying some weight. Notice it honestly and give yourself one small reset.";
+    else line2.textContent = "A "+n+" — nice and steady. Notice what's helping so you can come back to it.";
+    r.appendChild(line2);
+  }
+
+  function planText(){
+    var picks = chosenRespect();
+    var who = state.who.trim() || "[someone in my life]";
+    var lines = [];
+    lines.push("Person: " + who);
+    lines.push("Stress signals I noticed: " + (state.signals.trim() || "—"));
+    lines.push("RESPECT step(s): " + (picks.length ? picks.map(function(p){ return (p.L||p.id)+" — "+p.t; }).join(" + ") : "— (pick a card above)"));
+    lines.push("What it looks like: " + (picks.length ? picks.map(function(p){ return p.d; }).join(" ") : "—"));
+    lines.push("Opening words: " + (state.words.trim() ? "“"+state.words.trim()+"”" : "—"));
+    return lines.join("\n");
+  }
+
+  function summaryText(){
+    var L = [];
+    L.push("SYNAPSE™ LIFE & PERFORMANCE — S: SITUATED EMPATHY");
+    L.push("Honest Self-Check & The RESPECT Action Plan");
+    L.push("");
+    L.push("PART 1 — HONEST SELF-CHECK (Yourself)");
+    L.push("• Pressure I'm carrying: " + (state.stress.trim() || "—"));
+    var b = bodyLabels();
+    L.push("• Where I feel it: " + (b.length ? b.join(", ") : "—"));
+    L.push("• Stress level: " + state.level + "/10 (" + levelWord(state.level) + ")");
+    L.push("• The mask I've been wearing: " + (state.mask.trim() || "—"));
+    L.push("• Kind self-talk: " + (state.kind.trim() || "—"));
+    L.push("• One small reset: " + (state.reset.trim() || "—"));
+    L.push("");
+    L.push("PART 2 — RESPECT ACTION PLAN (Others)");
+    planText().split("\n").forEach(function(l){ L.push("• " + l); });
+    L.push("");
+    L.push("PART 3 — KNOWLEDGE CHECK: " + quizScore() + " / 3" + (quizDone() ? "" : " (in progress)"));
+    L.push("");
+    L.push(CHALLENGE);
+    return L.join("\n");
+  }
+
+  function progress(){
+    var s1 = state.stress.trim() && (state.body.length>0) && state.reset.trim();
+    var s2 = state.respect.length>0 && state.words.trim();
+    var s3 = quizDone();
+    var s4 = s1 && s2 && s3;
+    var done = [s1,s2,s3,s4].filter(Boolean).length;
+    var pct = Math.round(done/4*100);
+    $("progFill").style.width = pct+"%";
+    $("progBar").setAttribute("aria-valuenow", pct);
+    $("progText").textContent = done+" of 4 steps" + (done===4 ? " — complete! 🎉" : "");
+  }
+
+  function update(){
+    paintBody();
+    renderSelf();
+    $("planPreview").textContent = planText();
+    $("score").textContent = "Score: " + quizScore() + " / 3" + (quizDone() ? (quizScore()===3 ? " — perfect!" : " — nice work. Retry anytime.") : "");
+    $("out").textContent = summaryText();
+    progress();
+    save();
+    postHeight();
+  }
+
+  /* ---------- Buttons ---------- */
+  function toast(msg){ var t=$("toast"); t.textContent=msg; clearTimeout(toast._t); toast._t=setTimeout(function(){ t.textContent=""; }, 3500); }
+
+  function fallbackCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.top="-1000px"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){ ok=false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function selectSummary(){
+    try{ var range = document.createRange(); range.selectNodeContents($("out")); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }catch(e){}
+  }
+
+  $("copyBtn").addEventListener("click", function(){
+    var text = summaryText();
+    var done = function(){ toast("✅ Summary copied to your clipboard."); };
+    var fail = function(){
+      if(fallbackCopy(text)) done();
+      else { selectSummary(); toast("Summary selected — press Ctrl+C (or Cmd+C on Mac) to copy."); }
+    };
+    try{
+      if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(done, fail); }
+      else fail();
+    }catch(e){ fail(); }
+  });
+  $("printBtn").addEventListener("click", function(){ try{ window.print(); }catch(e){ toast("Printing isn't available here — use Copy Summary instead."); } });
+  $("resetBtn").addEventListener("click", function(){
+    if(!window.confirm("Clear all your answers and start over?")) return;
+    try{ window.localStorage.removeItem(KEY); }catch(e){}
+    state = {stress:"", mask:"", kind:"", reset:"", level:5, body:[], respect:[], who:"", signals:"", words:"", quiz:[null,null,null]};
+    var els = document.querySelectorAll("[data-key]");
+    for(var i=0;i<els.length;i++){ els[i].value = state[els[i].getAttribute("data-key")]; }
+    var p = document.querySelectorAll("#bodyPills .pill, #respectGrid .rcard");
+    for(var j=0;j<p.length;j++) p[j].setAttribute("aria-pressed","false");
+    paintQ(); update(); toast("Cleared. Fresh start.");
+    window.scrollTo(0,0);
+  });
+  $("retryQuiz").addEventListener("click", function(){ state.quiz=[null,null,null]; paintQ(); update(); });
+  $("suggestWords").addEventListener("click", function(){
+    var picks = chosenRespect();
+    if(!picks.length){ toast("Pick a RESPECT card first, then try again."); return; }
+    var who = state.who.trim();
+    var text = (who ? "Hey " + who + ", " : "Hey, ") + picks.map(function(p){ return p.say.charAt(0).toLowerCase()+p.say.slice(1); }).join(" ");
+    state.words = text; $("words").value = text; update();
+  });
+
+  /* ---------- Init ---------- */
+  load();
+  buildBody();
+  buildRespect();
+  bindInputs();
+  buildQuiz();
+  update();
+  window.addEventListener("resize", postHeight);
+  window.addEventListener("load", postHeight);
+})();
+</script>
+</body>
+</html>
